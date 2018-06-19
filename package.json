@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha -r ts-node/register test/test.ts"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/multiparty/oprf/issues"
   },
-  "homepage": "https://github.com/multiparty/oprf#readme"
+  "homepage": "https://github.com/multiparty/oprf#readme",
+  "dependencies": {
+    "mocha": "^5.2.0"
+  }
 }

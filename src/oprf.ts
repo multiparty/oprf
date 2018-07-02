@@ -18,7 +18,6 @@ export namespace OPRF{
     sodium = _sodium;
   }
 
-
   export function hashToPoint(input: string): Array<Number>{
     let hash = stringToBinary(input);
  

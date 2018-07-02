@@ -17,54 +17,62 @@ const ed = new eddsa('ed25519');
 const prime: BN = (new BN(2)).pow(new BN(252)).add(new BN('27742317777372353535851937790883648493'));
 
 
-describe('End-to-End Tests', () => {
+function endToEnd(input: string): void {
+  // output from OPRF
+  const maskedA = OPRF.maskInput(input);
+  const saltedPoint = OPRF.saltInput(maskedA.maskedPoint, scalarKey);
+  const unmasked = OPRF.unmaskInput(saltedPoint, maskedA.mask);
+
+  // PRF with same key
+  const hashed = OPRF.hashToPoint(input);
+  const point = ed.decodePoint(hashed);
+  const scalar = new BN(scalarKey);
+  const correct = ed.encodePoint(point.mul(scalar));
+
+  expect(unmasked).to.deep.equals(correct);
+}
+
+describe ('Scalar multiplication', () => {
+
+  it('Multiplicative inverse', async function() {
+    await _sodium.ready;
+    OPRF.init(_sodium);
+
+    const scalar = new BN('2');
+    const result = scalar.mul(scalar.invm(prime)).mod(prime).toString();
+
+    expect(result).to.equal('1');
+  });
+
+  it('Order plus 1', async function() {
+    await _sodium.ready;
+    OPRF.init(_sodium);
+
+    const orderPlus1 = prime.add(new BN('1'));
+
+    const hashed = OPRF.hashToPoint('hello world');
+    const point = ed.decodePoint(hashed);
+
+    const p = point.mul(orderPlus1);
+
+    const original = ed.encodePoint(point);
+    const plus1 = ed.encodePoint(p);
+
+    expect(original).to.deep.equals(plus1);
+    // expect(ed.encodePoint(p).to.deep.equals(ed.encodePoint(point)));
+    // expect(p.encode('hex')).to.equal(point.encode('hex'));
+
+  });
+
+});
+
+describe('End-to-end', () => {
 
   it('Deterministic', async function() {
     await _sodium.ready;
     OPRF.init(_sodium);
 
-    // output from OPRF
-    const maskedA = OPRF.maskInput('hello');
-    const saltedPoint = OPRF.saltInput(maskedA.maskedPoint, scalarKey);
-    const unmasked = OPRF.unmaskInput(saltedPoint, maskedA.mask);
-    
-    console.log(unmasked)
-    // PRF
-    const hash = OPRF.hashToPoint('hello');
-
-    const h = Array.from(hash);
-
-    const point = ed.decodePoint(h);
-    const scalar = new BN(scalarKey);
-    const prf = ed.encodePoint(point.mul(scalar));
-
-    expect(unmasked).to.deep.equals(prf);
-
-  });
-
-  it('Scalar multiplication - basic', async function() {
-    // await _sodium.ready;
-    // OPRF.init(_sodium);
-
-    // const scalar = new BN('2');
-    // const result = scalar.mul(scalar.invm(prime)).mod(prime).toString();
-
-    // expect(result).to.equal('1');
-
-  });
-
-  it('Scalar multiplication correctness', async function() {
-    // await _sodium.ready;
-    // OPRF.init(_sodium);
-
-    // const orderPlus1 = prime.add(new BN('1'));
-
-    // var point = ec.genKeyPair().getPublic();
-
-    // const p = point.mul(orderPlus1);
-
-    // expect(p.encode('hex')).to.equal(point.encode('hex'));
-
+    endToEnd('hello world');
   });
 });
 

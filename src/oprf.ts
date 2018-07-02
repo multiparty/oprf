@@ -10,7 +10,7 @@ export interface maskedData {
 export namespace OPRF{
   let sodium = null;
 
-  const curve = elliptic.ec;
+  // const curve = elliptic.ec;
   const eddsa = elliptic.eddsa;
   const ed = new eddsa('ed25519');
 
@@ -18,7 +18,7 @@ export namespace OPRF{
 
   // console.log(ed.encodePoint(h))
   
-  const ec = new curve('ed25519');
+  // const ec = new curve('ed25519');
   // const eddsa = 
   const prime: BN = (new BN(2)).pow(new BN(252)).add(new BN('27742317777372353535851937790883648493'));
 
@@ -27,7 +27,7 @@ export namespace OPRF{
   }
 
 
-  export function hashToPoint(input){
+  export function hashToPoint(input: string): Array<Number>{
     let hash = stringToBinary(input);
  
     let addressPool = [];
@@ -43,21 +43,19 @@ export namespace OPRF{
     const res = tools._format_output(result, 'uint8array');
   
     tools._free_all(addressPool);
-  
-    return res;
 
+    return Array.from(res);
   }
 
-  function bytesToHex(buffer) { // buffer is an ArrayBuffer
-    return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
-  }
+  // function bytesToHex(buffer) { // buffer is an ArrayBuffer
+  //   return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
+  // }
 
   export function maskInput(input: string): maskedData {
 
     const hashed = hashToPoint(input);
-    const h = Array.from(hashed);
 
-    const point = ed.decodePoint(h);
+    const point = ed.decodePoint(hashed);
 
     const maskBuffer: Uint8Array = sodium.randombytes_buf(32);
 

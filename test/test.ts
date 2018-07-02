@@ -29,6 +29,26 @@ function endToEnd(input: string): void {
   expect(unmasked).to.deep.equals(correct);
 }
 
+function createRandString(): string {
+
+  const alphabet: string[] = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
+                              "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+  let str: string = "";
+  for (let i: number = 0; i < getRandom(128); i++) {
+      const index: number = getRandom(alphabet.length);
+      str += alphabet[index];
+    }
+
+  if (str === "") {
+      str = "XXXXXX";
+    }
+  return str;
+}
+
+function getRandom(max: number): number {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
 describe ('Scalar multiplication', () => {
 
   it('Multiplicative inverse', async function() {
@@ -66,5 +86,17 @@ describe('End-to-end', () => {
 
     endToEnd('hello world');
   });
+
+  it('Exhaustive', async function() {
+    await _sodium.ready;
+    OPRF.init(_sodium);
+    
+    const testNum = 100;
+    for (var i = 0; i < testNum; i++) {
+      endToEnd(createRandString());
+    }
+  });
 });
+
+
 

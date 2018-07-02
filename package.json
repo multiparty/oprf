@@ -9,7 +9,18 @@
   },
   "scripts": {
     "compile": "tsc",
-    "test": "tslint -c tslint.json --project tsconfig.json && mocha -r ts-node/register test/test.ts"
+    "webpack": "webpack",
+    "test": "tslint -c tslint.json --project tsconfig.json && nyc mocha -r ts-node/register -r source-map-support/register test/oprf.spec.ts"
+  },
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "**/*.js",
+      "**/*.spec.ts"
+    ]
   },
   "repository": {
     "type": "git",
@@ -29,14 +40,19 @@
   },
   "devDependencies": {
     "@types/chai": "^4.1.4",
-    "@types/mocha": "^5.2.3",
     "@types/crypto-js": "^3.1.41",
+    "@types/mocha": "^5.2.3",
     "@types/node": "^10.3.6",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
+    "nyc": "^12.0.2",
+    "source-map-support": "^0.5.6",
+    "ts-loader": "^4.4.2",
     "ts-node": "^7.0.0",
+    "tslint": "^5.10.0",
     "types-bn": "0.0.1",
     "typescript": "^2.9.2",
-    "tslint": "^5.10.0"
+    "webpack": "^4.14.0",
+    "webpack-cli": "^3.0.8"
   }
 }

@@ -3,8 +3,10 @@
     "module": "commonjs",
     "target": "es5",
     "rootDir": "src",
-    "outDir": "./dist",
-    "lib": ["es2015", "dom"]
+    "outDir": "./lib",
+    "lib": ["es2015", "dom"],
+    "sourceMap": true,
+    "declaration": true
   },
   "include": [
     "src/**/*.ts",

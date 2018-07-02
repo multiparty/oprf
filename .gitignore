@@ -4,3 +4,6 @@ typings/
 *.log
 logs
 dist/
+lib/
+coverage/
+.nyc_output/

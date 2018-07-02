@@ -1,4 +1,4 @@
-import { OPRF } from '../src/index';
+import { OPRF } from '../src/oprf';
 import { expect } from 'chai';
 import elliptic = require('elliptic');
 import _sodium = require('libsodium-wrappers-sumo');
@@ -14,88 +14,88 @@ const ed = new eddsa('ed25519');
 const prime: BN = (new BN(2)).pow(new BN(252)).add(new BN('27742317777372353535851937790883648493'));
 
 
-function endToEnd(input: string): void {
-  // output from OPRF
-  const maskedA = OPRF.maskInput(input);
-  const saltedPoint = OPRF.saltInput(maskedA.maskedPoint, scalarKey);
-  const unmasked = OPRF.unmaskInput(saltedPoint, maskedA.mask);
+function endToEnd(input: string, oprf: OPRF): void {
+    // output from OPRF
+    const maskedA = oprf.maskInput(input);
+    const saltedPoint = oprf.saltInput(maskedA.maskedPoint, scalarKey);
+    const unmasked = oprf.unmaskInput(saltedPoint, maskedA.mask);
 
-  // PRF with same key
-  const hashed = OPRF.hashToPoint(input);
-  const point = ed.decodePoint(hashed);
-  const scalar = new BN(scalarKey);
-  const correct = ed.encodePoint(point.mul(scalar));
+    // PRF with same key
+    const hashed = oprf.hashToPoint(input);
+    const point = ed.decodePoint(hashed);
+    const scalar = new BN(scalarKey);
+    const correct = ed.encodePoint(point.mul(scalar));
 
-  expect(unmasked).to.deep.equals(correct);
+    expect(unmasked).to.deep.equals(correct);
 }
 
 function createRandString(): string {
 
-  const alphabet: string[] = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
-                              "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-  let str: string = "";
-  for (let i: number = 0; i < getRandom(128); i++) {
-      const index: number = getRandom(alphabet.length);
-      str += alphabet[index];
+    const alphabet: string[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+        'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+    let str: string = '';
+    for (let i: number = 0; i < getRandom(128); i++) {
+        const index: number = getRandom(alphabet.length);
+        str += alphabet[index];
     }
 
-  if (str === "") {
-      str = "XXXXXX";
+    if (str === '') {
+        str = 'XXXXXX';
     }
-  return str;
+    return str;
 }
 
 function getRandom(max: number): number {
-  return Math.floor(Math.random() * Math.floor(max));
+    return Math.floor(Math.random() * Math.floor(max));
 }
 
-describe ('Scalar multiplication', () => {
+describe('Scalar multiplication', () => {
 
-  it('Multiplicative inverse', async function() {
-    await _sodium.ready;
-    OPRF.init(_sodium);
+    it('Multiplicative inverse', async function () {
+        //await _sodium.ready;
+        //const oprf = new OPRF(_sodium);
 
-    const scalar = new BN('2');
-    const result = scalar.mul(scalar.invm(prime)).mod(prime).toString();
+        const scalar = new BN('2');
+        const result = scalar.mul(scalar.invm(prime)).mod(prime).toString();
 
-    expect(result).to.equal('1');
-  });
+        expect(result).to.equal('1');
+    });
 
-  it('Order plus 1', async function() {
-    await _sodium.ready;
-    OPRF.init(_sodium);
+    it('Order plus 1', async function () {
+        await _sodium.ready;
+        const oprf = new OPRF(_sodium);
 
-    const orderPlus1 = prime.add(new BN('1'));
+        const orderPlus1 = prime.add(new BN('1'));
 
-    const hashed = OPRF.hashToPoint('hello world');
-    const point = ed.decodePoint(hashed);
+        const hashed = oprf.hashToPoint('hello world');
+        const point = ed.decodePoint(hashed);
 
-    const p = point.mul(orderPlus1);
-    const original = ed.encodePoint(point);
-    const plus1 = ed.encodePoint(p);
+        const p = point.mul(orderPlus1);
+        const original = ed.encodePoint(point);
+        const plus1 = ed.encodePoint(p);
 
-    expect(original).to.deep.equals(plus1);
-  });
+        expect(original).to.deep.equals(plus1);
+    });
 });
 
 describe('End-to-end', () => {
 
-  it('Deterministic', async function() {
-    await _sodium.ready;
-    OPRF.init(_sodium);
+    it('Deterministic', async function () {
+        await _sodium.ready;
+        const oprf = new OPRF(_sodium);
 
-    endToEnd('hello world');
-  });
+        endToEnd('hello world', oprf);
+    });
 
-  it('Exhaustive', async function() {
-    await _sodium.ready;
-    OPRF.init(_sodium);
-    
-    const testNum = 100;
-    for (var i = 0; i < testNum; i++) {
-      endToEnd(createRandString());
-    }
-  });
+    it('Exhaustive', async function () {
+        await _sodium.ready;
+        const oprf = new OPRF(_sodium);
+
+        const testNum = 100;
+        for (var i = 0; i < testNum; i++) {
+            endToEnd(createRandString(), oprf);
+        }
+    });
 });
 
 

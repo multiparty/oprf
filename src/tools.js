@@ -2,16 +2,16 @@
 
 // if (typeof window === 'undefined') {
 
-  const sodium = require('libsodium-wrappers-sumo');
-  const libsodium = sodium.libsodium;
-  
-  module.exports = {
-    AllocatedBuf: AllocatedBuf,
-    _any_to_Uint8Array: _any_to_Uint8Array,
-    _to_allocated_buf_address: _to_allocated_buf_address,
-    _format_output: _format_output,
-    _free_all: _free_all
-  };
+const sodium = require('libsodium-wrappers-sumo');
+const libsodium = sodium.libsodium;
+
+module.exports = {
+  AllocatedBuf: AllocatedBuf,
+  _any_to_Uint8Array: _any_to_Uint8Array,
+  _to_allocated_buf_address: _to_allocated_buf_address,
+  _format_output: _format_output,
+  _free_all: _free_all
+};
 
 
 // }

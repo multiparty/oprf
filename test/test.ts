@@ -1,14 +1,11 @@
 import { OPRF } from '../src/index';
 import { expect } from 'chai';
-// import * as crypto from "crypto";
 import elliptic = require('elliptic');
 import _sodium = require('libsodium-wrappers-sumo');
 import BN = require('bn.js')
 
 
 const scalarKey = 'a20a9b3c5f5b83a326f50a71e296c2c0161a2660b501e538fe88fb2e740dd3f'
-const curve = elliptic.ec;
-// const ec = new curve('curve25519');
 
 const eddsa = elliptic.eddsa;
 const ed = new eddsa('ed25519');
@@ -54,16 +51,11 @@ describe ('Scalar multiplication', () => {
     const point = ed.decodePoint(hashed);
 
     const p = point.mul(orderPlus1);
-
     const original = ed.encodePoint(point);
     const plus1 = ed.encodePoint(p);
 
     expect(original).to.deep.equals(plus1);
-    // expect(ed.encodePoint(p).to.deep.equals(ed.encodePoint(point)));
-    // expect(p.encode('hex')).to.equal(point.encode('hex'));
-
   });
-
 });
 
 describe('End-to-end', () => {

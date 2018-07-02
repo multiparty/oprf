@@ -10,16 +10,8 @@ export interface maskedData {
 export namespace OPRF{
   let sodium = null;
 
-  // const curve = elliptic.ec;
   const eddsa = elliptic.eddsa;
   const ed = new eddsa('ed25519');
-
-  // console.log('ed',ed)
-
-  // console.log(ed.encodePoint(h))
-  
-  // const ec = new curve('ed25519');
-  // const eddsa = 
   const prime: BN = (new BN(2)).pow(new BN(252)).add(new BN('27742317777372353535851937790883648493'));
 
   export function init(_sodium): void{
@@ -47,9 +39,6 @@ export namespace OPRF{
     return Array.from(res);
   }
 
-  // function bytesToHex(buffer) { // buffer is an ArrayBuffer
-  //   return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
-  // }
 
   export function maskInput(input: string): maskedData {
 
@@ -86,15 +75,12 @@ export namespace OPRF{
     
     const point = ed.decodePoint(salted);
 
-    // const point = ec.keyFromPublic(salted, 'hex');
     const inv = mask.invm(prime);
 
     const unmasked = point.mul(inv);
 
     return ed.encodePoint(unmasked);
-    // const unmasked = point.getPublic().mul(inv);
 
-    // return unmasked.encode('hex');
   }
 
 

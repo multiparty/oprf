@@ -87,11 +87,11 @@ describe('End-to-end', () => {
     endToEnd('hello world');
   });
 
-  it('Exhaustive', async function() {
+  it('Stress test', async function() {
     await _sodium.ready;
     OPRF.init(_sodium);
     
-    const testNum = 100;
+    const testNum = 5;
     for (var i = 0; i < testNum; i++) {
       endToEnd(createRandString());
     }

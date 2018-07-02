@@ -1,9 +1,9 @@
 import elliptic = require('elliptic');
 import BN = require('bn.js');
-import * as crypto from "crypto";
+import * as tools from './tools';
 
 export interface maskedData {
-  readonly maskedPoint: string, 
+  readonly maskedPoint: Array<Number>, 
   readonly mask: BN
 }
 
@@ -11,53 +11,128 @@ export namespace OPRF{
   let sodium = null;
 
   const curve = elliptic.ec;
-  const ec = new curve('curve25519');
+  const eddsa = elliptic.eddsa;
+  const ed = new eddsa('ed25519');
+
+  // console.log('ed',ed)
+
+  // console.log(ed.encodePoint(h))
+  
+  const ec = new curve('ed25519');
+  // const eddsa = 
   const prime: BN = (new BN(2)).pow(new BN(252)).add(new BN('27742317777372353535851937790883648493'));
 
   export function init(_sodium): void{
     sodium = _sodium;
   }
 
-  export function maskInput(input: string): maskedData {
+
+  export function hashToPoint(input){
+    let hash = stringToBinary(input);
  
-    const hash = crypto.createHash('sha256');
+    let addressPool = [];
+    let result = new tools.AllocatedBuf(sodium.libsodium._crypto_core_ed25519_uniformbytes());
+    const resultAddress = result.address;
+    addressPool.push(resultAddress);
+  
+    hash = tools._any_to_Uint8Array(addressPool, hash, 'hash');
+    let hashAddress = tools._to_allocated_buf_address(hash);
+    addressPool.push(hashAddress);
+  
+    sodium.libsodium._crypto_core_ed25519_from_uniform(resultAddress, hashAddress);
+    const res = tools._format_output(result, 'uint8array');
+  
+    tools._free_all(addressPool);
+  
+    return res;
 
-    hash.update(input);
+  }
 
-    const point = ec.keyFromPublic(hash.digest('hex')).getPublic();
+  function bytesToHex(buffer) { // buffer is an ArrayBuffer
+    return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
+  }
+
+  export function maskInput(input: string): maskedData {
+
+    const hashed = hashToPoint(input);
+    const h = Array.from(hashed);
+
+    const point = ed.decodePoint(h);
+
     const maskBuffer: Uint8Array = sodium.randombytes_buf(32);
-    // TODO: test if bytes to BN is working on buffer
+
     const mask: BN = bytesToBN(maskBuffer).mod(prime);
 
-    const maskedPoint = point.mul(mask).encode('hex');
-
+    const maskedPoint = ed.encodePoint(point.mul(mask));
+    
     return {maskedPoint, mask};
 
   }
 
-  export function saltInput(maskedPoint: string, key: string) {
+  /**
+   * 
+   * @param maskedPoint hex string representing masked point
+   * @param key private key of server
+   * @returns {string} salted point in hex format 
+   */
+  export function saltInput(maskedPoint: Array<Number>, key: string): Array<Number> {
     
-    const scalar = new BN(key);
+    const scalar: BN = new BN(key);
 
-    const point = ec.keyFromPublic(maskedPoint, 'hex');
+    const point = ed.decodePoint(maskedPoint)
 
-    return point.getPublic().mul(scalar).encode('hex');
-    
+    return ed.encodePoint(point.mul(scalar));
   }
 
-  export function unmaskInput(salted: string, mask: BN): string {
+  export function unmaskInput(salted: Array<Number>, mask: BN): Array<Number> {
     
-    const point = ec.keyFromPublic(salted, 'hex');
+    const point = ed.decodePoint(salted);
 
+    // const point = ec.keyFromPublic(salted, 'hex');
     const inv = mask.invm(prime);
 
-    const unmasked = point.getPublic().mul(inv);
+    const unmasked = point.mul(inv);
 
-    return unmasked.encode('hex');
+    return ed.encodePoint(unmasked);
+    // const unmasked = point.getPublic().mul(inv);
+
+    // return unmasked.encode('hex');
   }
 
 
-  export function bytesToBN(bytes): BN {
+  function stringToBinary(input: string): string {
+    var result = [];
+  
+    for (var i = 0; i < input.length; i++) {
+      var binaryArr = numToBin(input.charCodeAt(i));
+      result = result.concat(binaryArr);
+    }
+  
+    var resultString = ""
+    for (var i = 0; i < result.length; i++) {
+      resultString += result[i];
+    }
+    return resultString;
+  }
+  
+
+function numToBin(n) {
+  var result = [];
+
+  while (n > 0) {
+    var bit = Math.floor(n % 2) != 0 ? 1 : 0;
+    result.unshift(bit);
+
+    n = Math.floor(n/2);
+  }
+
+  while (result.length != 8) {
+    result.unshift(0);
+  }
+  return result;
+}
+
+  function bytesToBN(bytes): BN {
 
     let result = new BN('0');
   

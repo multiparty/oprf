@@ -27,6 +27,7 @@
     "crypto": "^1.0.1",
     "elliptic": "^6.4.0",
     "libsodium-wrappers": "^0.7.3",
+    "libsodium-wrappers-sumo": "^0.7.3",
     "typescript": "^2.9.2"
   },
   "devDependencies": {

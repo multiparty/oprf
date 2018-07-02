@@ -1,7 +1,7 @@
 {
   "name": "oprf",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.2",
+  "description": "Oblivious pseudo-random function over an elliptic curve (ED25519)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "directories": {
@@ -14,8 +14,8 @@
     "type": "git",
     "url": "git+https://github.com/multiparty/oprf.git"
   },
-  "author": "Lucy Qin <lucyzqin@gmail.com>",
-  "license": "ISC",
+  "author": "Boston University - Software & Application Innovation Lab",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/multiparty/oprf/issues"
   },

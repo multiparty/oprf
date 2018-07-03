@@ -91,7 +91,7 @@ describe('End-to-end', () => {
     await _sodium.ready;
     OPRF.init(_sodium);
     
-    const testNum = 5;
+    const testNum = 100;
     for (var i = 0; i < testNum; i++) {
       endToEnd(createRandString());
     }

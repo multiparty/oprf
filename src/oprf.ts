@@ -3,7 +3,7 @@ import elliptic = require('elliptic');
 import * as tools from './tools';
 
 export interface IMaskedData {
-    readonly maskedPoint: number[];
+    readonly point: number[];
     readonly mask: BN;
 }
 
@@ -18,6 +18,11 @@ export class OPRF {
         this.sodium = sodium;
     }
 
+    /**
+     * Hash to point
+     * @param {string} input
+     * @returns {number[]} array of numbers representing a point on the curve ed25519
+     */
     public hashToPoint(input: string): number[] {
         let hash = this.stringToBinary(input);
 
@@ -50,7 +55,7 @@ export class OPRF {
 
         const maskedPoint = this.ed.encodePoint(point.mul(mask));
 
-        return {maskedPoint, mask};
+        return {point: maskedPoint, mask};
 
     }
 
@@ -62,6 +67,7 @@ export class OPRF {
      */
     public saltInput(maskedPoint: number[], key: string): number[] {
 
+        // check that key is 32 bytes
         const scalar: BN = new BN(key);
 
         const point = this.ed.decodePoint(maskedPoint);

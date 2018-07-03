@@ -16,10 +16,9 @@ const prime: BN = (new BN(2)).pow(new BN(252)).add(new BN('277423177773723535358
 
 function endToEnd(input: string, oprf: OPRF): void {
     // output from OPRF
-    const maskedA = oprf.maskInput(input);
-    const saltedPoint = oprf.saltInput(maskedA.maskedPoint, scalarKey);
-    const unmasked = oprf.unmaskInput(saltedPoint, maskedA.mask);
-
+    const masked = oprf.maskInput(input);
+    const saltedPoint = oprf.saltInput(masked.point, scalarKey);
+    const unmasked = oprf.unmaskInput(saltedPoint, masked.mask);
     // PRF with same key
     const hashed = oprf.hashToPoint(input);
     const point = ed.decodePoint(hashed);
@@ -52,9 +51,8 @@ function getRandom(max: number): number {
 describe('Scalar multiplication', () => {
 
     it('Multiplicative inverse', async function () {
-        //await _sodium.ready;
-        //const oprf = new OPRF(_sodium);
 
+        // actual mod, not remainder
         const scalar = new BN('2');
         const result = scalar.mul(scalar.invm(prime)).mod(prime).toString();
 

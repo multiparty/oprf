@@ -77,10 +77,22 @@ describe('Scalar multiplication', () => {
 });
 
 describe('End-to-end', () => {
-
-  it('Deterministic', async function () {
+  it('empty input', async function() {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
+
+    expect(() => endToEnd('', oprf)).to.throw('Empty input string.');
+
+  });
+
+  it('basic', async function () {
+    await _sodium.ready;
+    const oprf = new OPRF(_sodium);
+
+    // const key = _sodium.randombytes_buf(32);
+    // console.log(key.length)
+    // const k = bytesToBN(key);
+    // console.log(k.byteLength())
 
     endToEnd('hello world', oprf);
   });
@@ -96,3 +108,22 @@ describe('End-to-end', () => {
   });
 });
 
+
+
+
+  /**
+   * Converts an array of numbers to its big number representation
+   * @param bytes 
+   * @returns {BN} big number representation of number array
+   */
+  function bytesToBN(bytes: Uint8Array): BN {
+
+    let result = new BN('0');
+
+    for (let i = bytes.length - 1; i >= 0; i--) {
+        const b = new BN(bytes[i]);
+
+        result = result.or(b).shln(i * 8);
+    }
+    return result;
+  }

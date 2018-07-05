@@ -52,14 +52,20 @@ export class OPRF {
    */
   public maskInput(input: string): IMaskedData {
 
-    const hashed = this.hashToPoint(input);
+    if (input.length <= 0) {
+      throw new Error('Empty input string.')
+    }
 
+    const hashed: number[] = this.hashToPoint(input);
+
+    // elliptic.js point
     const point = this.ed.decodePoint(hashed);
 
     const maskBuffer: Uint8Array = this.sodium.randombytes_buf(32);
 
     const mask: BN = this.bytesToBN(maskBuffer).mod(this.prime);
 
+    // elliptic.js point
     const maskedPoint = this.ed.encodePoint(point.mul(mask));
 
     return {point: maskedPoint, mask};
@@ -74,9 +80,9 @@ export class OPRF {
    */
   public saltInput(p: number[], key: string): number[] {
 
-    // check that key is 32 bytes
     const scalar: BN = new BN(key);
 
+    // elliptic.js point
     const point = this.ed.decodePoint(p);
 
     return this.ed.encodePoint(point.mul(scalar));

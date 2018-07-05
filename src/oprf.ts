@@ -45,6 +45,11 @@ export class OPRF {
     return Array.from(res);
   }
 
+  /**
+   * Hashes input as a point on an elliptic curve and applies a random mask to it
+   * @param input 
+   * @returns {IMaskedData} the original input in the form of a masked point and the mask
+   */
   public maskInput(input: string): IMaskedData {
 
     const hashed = this.hashToPoint(input);
@@ -62,21 +67,27 @@ export class OPRF {
   }
 
   /**
-   *
-   * @param maskedPoint hex string representing masked point
+   * Salts a point using a key as a scalar
+   * @param p hex string representing a masked point
    * @param key private key of server
    * @returns {string} salted point in hex format
    */
-  public saltInput(maskedPoint: number[], key: string): number[] {
+  public saltInput(p: number[], key: string): number[] {
 
     // check that key is 32 bytes
     const scalar: BN = new BN(key);
 
-    const point = this.ed.decodePoint(maskedPoint);
+    const point = this.ed.decodePoint(p);
 
     return this.ed.encodePoint(point.mul(scalar));
   }
 
+  /**
+   * Unmasks a salted value to reveal the original input value salted with a private key
+   * @param salted a salted point
+   * @param mask the original mask that was applied
+   * @returns {number[]} the resulting value from the OPRF
+   */
   public unmaskInput(salted: number[], mask: BN): number[] {
 
     const point = this.ed.decodePoint(salted);
@@ -89,6 +100,11 @@ export class OPRF {
 
   }
 
+  /**
+   * Converts the input to a binary string
+   * @param input 
+   * @returns {string} a string of 0's and 1's representing the original input
+   */
   private stringToBinary(input: string): string {
     let result = [];
 
@@ -105,7 +121,11 @@ export class OPRF {
     return resultString;
   }
 
-  private numToBin(n) {
+  /**
+   * Converts a number to its binary representation
+   * @param n 
+   */
+  private numToBin(n: number): object {
     const result = [];
 
     while (n > 0) {
@@ -118,10 +138,16 @@ export class OPRF {
     while (result.length !== 8) {
         result.unshift(0);
     }
+   
     return result;
   }
 
-  private bytesToBN(bytes): BN {
+  /**
+   * Converts an array of numbers to its big number representation
+   * @param bytes 
+   * @returns {BN} big number representation of number array
+   */
+  private bytesToBN(bytes: Uint8Array): BN {
 
     let result = new BN('0');
 

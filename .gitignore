@@ -5,3 +5,4 @@ typings/
 logs
 dist/
 .nyc*
+.DS_Store

@@ -1,3 +1,4 @@
 tsconfig.json
 src/
 .nyc_output/
+.DS_Store

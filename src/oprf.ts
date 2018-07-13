@@ -45,6 +45,14 @@ export class OPRF {
     return Array.from(res);
   }
 
+  public generateRandomScalar(): BN {
+
+    const m: Uint8Array = this.sodium.randombytes_buf(32);
+    
+    return this.bytesToBN(m).mod(this.prime);
+
+  }
+
   /**
    * Hashes input as a point on an elliptic curve and applies a random mask to it
    * @param input 

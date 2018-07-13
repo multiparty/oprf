@@ -1,4 +1,4 @@
-import { OPRF } from '../dist/oprf';
+import { OPRF } from '../src/oprf';
 import { expect } from 'chai';
 import elliptic = require('elliptic');
 import _sodium = require('libsodium-wrappers-sumo');

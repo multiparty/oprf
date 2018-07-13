@@ -1,4 +1,4 @@
-import { OPRF } from '../src/oprf';
+import { OPRF } from '../dist/oprf';
 import { expect } from 'chai';
 import elliptic = require('elliptic');
 import _sodium = require('libsodium-wrappers-sumo');
@@ -16,9 +16,20 @@ const prime: BN = (new BN(2)).pow(new BN(252)).add(new BN('277423177773723535358
 
 function endToEnd(input: string, oprf: OPRF): void {
     // output from OPRF
+
+    // mask once 
     const masked = oprf.maskInput(input);
+    // send masked to each key server
+
+    // server 
     const saltedPoint = oprf.saltInput(masked.point, scalarKey);
+    
+    // response from server is saltedPoint
     const unmasked = oprf.unmaskInput(saltedPoint, masked.mask);
+
+    // XOR from both requests to server 
+    // call umbral with the result from OPRF as phat
+
     // PRF with same key
     const hashed = oprf.hashToPoint(input);
     const point = ed.decodePoint(hashed);
@@ -85,18 +96,6 @@ describe('End-to-end', () => {
 
   });
 
-  it('basic', async function () {
-    await _sodium.ready;
-    const oprf = new OPRF(_sodium);
-
-    // const key = _sodium.randombytes_buf(32);
-    // console.log(key.length)
-    // const k = bytesToBN(key);
-    // console.log(k.byteLength())
-
-    endToEnd('hello world', oprf);
-  });
-
   it('stress', async function () {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
@@ -107,23 +106,3 @@ describe('End-to-end', () => {
     }
   });
 });
-
-
-
-
-  /**
-   * Converts an array of numbers to its big number representation
-   * @param bytes 
-   * @returns {BN} big number representation of number array
-   */
-  function bytesToBN(bytes: Uint8Array): BN {
-
-    let result = new BN('0');
-
-    for (let i = bytes.length - 1; i >= 0; i--) {
-        const b = new BN(bytes[i]);
-
-        result = result.or(b).shln(i * 8);
-    }
-    return result;
-  }

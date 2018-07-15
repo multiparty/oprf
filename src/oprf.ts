@@ -171,6 +171,5 @@ export class OPRF {
         result = result.or(b).shln(i * 8);
     }
     return result;
-  }
-
+  } 
 }

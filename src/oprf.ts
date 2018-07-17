@@ -20,7 +20,6 @@ export class OPRF {
   constructor(sodium) {
       this.sodium = sodium;
       this.tools = new Tools();
-      console.log(this.tools)
   }
 
   /**

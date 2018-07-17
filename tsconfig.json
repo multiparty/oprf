@@ -4,11 +4,13 @@
     "target": "es5",
     "declaration": true,
     "outDir": "./dist",
-    "lib": ["es2015", "dom"]
+    "lib": ["es2015", "dom"],
+    "typeRoots": ["./types", "./node_modules/@types"]
   },
   "include": [
     "src/*",
     "./node_modules/types-bn/index.d.ts"
-  ]
+  ], 
+  "exclude": ["node_modules", "typings"]
 }
 

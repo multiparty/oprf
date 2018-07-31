@@ -2,16 +2,17 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
+    "declaration": true,
     "rootDir": "src",
-    "outDir": "./lib",
+    "outDir": "./dist",
     "lib": ["es2015", "dom"],
-    "sourceMap": true,
-    "declaration": true
+    "typeRoots": ["./types", "./node_modules/@types"],
+    "noImplicitAny": false
   },
   "include": [
     "src/**/*.ts",
     "./node_modules/types-bn/index.d.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "typings"]
 }
 

@@ -1,3 +1,9 @@
 /node_modules
 /coverage
 /src
+tsconfig.json
+.nyc_output/
+.DS_Store
+types/
+tslint.json
+.idea/

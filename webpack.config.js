@@ -1,7 +1,16 @@
 module.exports = {
-  entry: "./src/oprf.ts",
+  entry: './src/oprf.ts',
   output: {
-    filename: "bundle.js"
+    filename: 'oprf.js',
+    library: 'oprf'
+  },
+  externals: {
+    'libsodium-wrappers-sumo': {
+      commonjs: 'libsodium-wrappers-sumo',
+      commonjs2: 'libsodium-wrappers-sumo',
+      amd: 'libsodium-wrappers-sumo',
+      root: 'sodium'
+    }
   },
   resolve: {
     // Add '.ts' and '.tsx' as a resolvable extension.
@@ -10,7 +19,7 @@ module.exports = {
   module: {
     rules: [
       // all files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'
-      { test: /\.tsx?$/, loader: "ts-loader" }
+      {test: /\.tsx?$/, loader: "ts-loader"}
     ]
   }
 };

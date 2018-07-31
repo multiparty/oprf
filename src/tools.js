@@ -2,7 +2,7 @@
 
 // if (typeof window === 'undefined') {
 
-const sodium = require('libsodium-wrappers-sumo');
+const sodium = window.sodium;
 const libsodium = sodium.libsodium;
 
 module.exports = {

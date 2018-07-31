@@ -82,7 +82,7 @@ export class OPRF {
 
   }
 
-  public isValidPoint(p: number[]): boolean {
+  public isValidPoint(p: number[]): number {
 
     const point = new Uint8Array(p);
 
@@ -96,10 +96,7 @@ export class OPRF {
    */
   public saltInput(p: number[], key: string): number[] {
 
-    // TODO: check that point is on the curve 25519
-    // throw error 
-
-    if (!this.isValidPoint(p)) {
+    if (this.isValidPoint(p) === 0) {
       throw new Error('Input is not a valid ED25519 point.');
     }
 

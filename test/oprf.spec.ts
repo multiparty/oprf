@@ -15,51 +15,41 @@ const prime: BN = (new BN(2)).pow(new BN(252)).add(new BN('277423177773723535358
 
 
 function endToEnd(input: string, oprf: OPRF): void {
-    // output from OPRF
 
-    // mask once 
-    const masked = oprf.maskInput(input);
-    // send masked to each key server
+  const masked = oprf.maskInput(input);
+  const saltedPoint = oprf.saltInput(masked.point, scalarKey);
+  
+  const unmasked = oprf.unmaskInput(saltedPoint, masked.mask);
 
-    // server 
-    const saltedPoint = oprf.saltInput(masked.point, scalarKey);
-    
-    // response from server is saltedPoint
-    const unmasked = oprf.unmaskInput(saltedPoint, masked.mask);
+  const hashed = oprf.hashToPoint(input);
+  const point = ed.decodePoint(hashed);
+  const scalar = new BN(scalarKey);
+  const correct = ed.encodePoint(point.mul(scalar));
 
-    // add points from both key servers
-    // call umbral with the result from OPRF as phat
-
-    // PRF with same key
-    const hashed = oprf.hashToPoint(input);
-    const point = ed.decodePoint(hashed);
-    const scalar = new BN(scalarKey);
-    const correct = ed.encodePoint(point.mul(scalar));
-
-    expect(unmasked).to.deep.equals(correct);
+  expect(unmasked).to.deep.equals(correct);
 }
 
 function createRandString(): string {
 
-    const alphabet: string[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-        'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-    let str: string = '';
-    for (let i: number = 0; i < getRandom(128); i++) {
-        const index: number = getRandom(alphabet.length);
-        str += alphabet[index];
-    }
+  const alphabet: string[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+      'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+  let str: string = '';
+  for (let i: number = 0; i < getRandom(128); i++) {
+      const index: number = getRandom(alphabet.length);
+      str += alphabet[index];
+  }
 
-    if (str === '') {
-        str = 'XXXXXX';
-    }
-    return str;
+  if (str === '') {
+      str = 'XXXXXX';
+  }
+  return str;
 }
 
 function getRandom(max: number): number {
-    return Math.floor(Math.random() * Math.floor(max));
+  return Math.floor(Math.random() * Math.floor(max));
 }
 
-describe('Scalar multiplication', () => {
+describe('Elliptic Curve Basics', () => {
 
   it('Multiplicative inverse', async function () {
 
@@ -87,22 +77,31 @@ describe('Scalar multiplication', () => {
   });
 });
 
-describe('End-to-end', () => {
-  it('empty input', async function() {
+describe('End-to-End', () => {
+  it('Stress', async function () {
+    await _sodium.ready;
+    const oprf = new OPRF(_sodium);
+
+    const testNum = 25;
+    for (var i = 0; i < testNum; i++) {
+        endToEnd(createRandString(), oprf);
+    }
+  });
+});
+describe('Error Cases', () => {
+  it('Empty input', async function() {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
 
     expect(() => endToEnd('', oprf)).to.throw('Empty input string.');
-
   });
 
-  it('stress', async function () {
+  it('Point not on curve', async function() {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
 
-    const testNum = 10;
-    for (var i = 0; i < testNum; i++) {
-        endToEnd(createRandString(), oprf);
-    }
+    const point = [1];
+
+    expect(() => oprf.saltInput(point, scalarKey)).to.throw('Input is not a valid ED25519 point.');
   });
 });

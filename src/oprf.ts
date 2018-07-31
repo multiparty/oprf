@@ -82,6 +82,12 @@ export class OPRF {
 
   }
 
+  public isValidPoint(p: number[]): boolean {
+
+    const point = new Uint8Array(p);
+
+    return this.sodium.libsodium._crypto_core_ed25519_is_valid_point(point);
+  }
   /**
    * Salts a point using a key as a scalar
    * @param p hex string representing a masked point
@@ -89,6 +95,13 @@ export class OPRF {
    * @returns {string} salted point in hex format
    */
   public saltInput(p: number[], key: string): number[] {
+
+    // TODO: check that point is on the curve 25519
+    // throw error 
+
+    if (!this.isValidPoint(p)) {
+      throw new Error('Input is not a valid ED25519 point.');
+    }
 
     const scalar: BN = new BN(key);
 

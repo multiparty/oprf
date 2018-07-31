@@ -27,7 +27,7 @@ function endToEnd(input: string, oprf: OPRF): void {
     // response from server is saltedPoint
     const unmasked = oprf.unmaskInput(saltedPoint, masked.mask);
 
-    // XOR from both requests to server 
+    // add points from both key servers
     // call umbral with the result from OPRF as phat
 
     // PRF with same key

@@ -1,6 +1,6 @@
 import BN = require('bn.js');
 import elliptic = require('elliptic');
-import { Tools, AllocatedBuf } from './tools';
+import { AllocatedBuf, Tools } from './tools';
 
 export interface IMaskedData {
     readonly point: number[];
@@ -33,14 +33,14 @@ export class OPRF {
         const resultAddress = result.address;
         addressPool.push(resultAddress);
 
-        hash = this.tools._any_to_Uint8Array(addressPool, hash, 'hash');
-        const hashAddress = this.tools._to_allocated_buf_address(hash);
+        hash = this.tools.any_to_Uint8Array(addressPool, hash, 'hash');
+        const hashAddress = this.tools.to_allocated_buf_address(hash);
         addressPool.push(hashAddress);
 
         this.sodium.libsodium._crypto_core_ed25519_from_uniform(resultAddress, hashAddress);
-        const res = this.tools._format_output(result, 'uint8array');
+        const res = this.tools.format_output(result, 'uint8array');
 
-        this.tools._free_all(addressPool);
+        this.tools.free_all(addressPool);
 
         return Array.from(res);
     }
@@ -61,7 +61,7 @@ export class OPRF {
     public maskInput(input: string): IMaskedData {
 
         if (input.length <= 0) {
-            throw new Error('Empty input string.')
+            throw new Error('Empty input string.');
         }
 
         const hashed: number[] = this.hashToPoint(input);

@@ -1,7 +1,7 @@
 module.exports = {
   entry: './src/oprf.ts',
   output: {
-    filename: 'oprf.js',
+    filename: 'oprf-bundle.js',
     library: 'oprf'
   },
   externals: {

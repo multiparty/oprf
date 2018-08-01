@@ -4,5 +4,7 @@ typings/
 *.log
 logs
 dist/
-.nyc*
+lib/
+coverage/
+.nyc_output/
 .DS_Store

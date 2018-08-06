@@ -1,18 +1,20 @@
 {
   "compilerOptions": {
+    "outDir": "dist",
     "module": "commonjs",
     "target": "es5",
+    "sourceMap": false,
     "declaration": true,
-    "rootDir": "src",
-    "outDir": "./dist",
-    "lib": ["es2015", "dom"],
-    "typeRoots": ["./types", "./node_modules/@types"],
-    "noImplicitAny": false
+    "lib": ["es2015", "dom"]
   },
   "include": [
-    "src/**/*.ts",
-    "./node_modules/types-bn/index.d.ts"
+    "src/**/*.ts"
   ],
-  "exclude": ["node_modules", "typings"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "dist-web",
+    "test/**/*.spec.ts"
+  ]
 }
 

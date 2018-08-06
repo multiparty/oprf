@@ -9,7 +9,7 @@ export interface IMaskedData {
 
 export class OPRF {
     private sodium = null;
-    private tools = null;
+    private tools: Tools = null;
 
     private eddsa = elliptic.eddsa;
     private ed = new this.eddsa('ed25519');
@@ -50,7 +50,6 @@ export class OPRF {
         const m: Uint8Array = this.sodium.randombytes_buf(32);
 
         return this.bytesToBN(m).mod(this.prime);
-
     }
 
     /**
@@ -65,19 +64,14 @@ export class OPRF {
         }
 
         const hashed: number[] = this.hashToPoint(input);
-
         // elliptic.js point
         const point = this.ed.decodePoint(hashed);
-
         const maskBuffer: Uint8Array = this.sodium.randombytes_buf(32);
-
         const mask: BN = this.bytesToBN(maskBuffer).mod(this.prime);
-
         // elliptic.js point
         const maskedPoint = this.ed.encodePoint(point.mul(mask));
 
         return {point: maskedPoint, mask};
-
     }
 
     public isValidPoint(p: number[]): number {
@@ -100,7 +94,6 @@ export class OPRF {
         }
 
         const scalar: BN = new BN(key);
-
         // elliptic.js point
         const point = this.ed.decodePoint(p);
 
@@ -116,13 +109,10 @@ export class OPRF {
     public unmaskInput(salted: number[], mask: BN): number[] {
 
         const point = this.ed.decodePoint(salted);
-
         const inv = mask.invm(this.prime);
-
         const unmasked = point.mul(inv);
 
         return this.ed.encodePoint(unmasked);
-
     }
 
     /**
@@ -131,8 +121,8 @@ export class OPRF {
      * @returns {string} a string of 0's and 1's representing the original input
      */
     private stringToBinary(input: string): string {
-        let result = [];
 
+        let result = [];
         for (let i = 0; i < input.length; i++) {
             const binaryArr = this.numToBin(input.charCodeAt(i));
             result = result.concat(binaryArr);
@@ -151,8 +141,8 @@ export class OPRF {
      * @param n
      */
     private numToBin(n: number): object {
-        const result = [];
 
+        const result = [];
         while (n > 0) {
             const bit = Math.floor(n % 2) !== 0 ? 1 : 0;
             result.unshift(bit);
@@ -175,12 +165,12 @@ export class OPRF {
     private bytesToBN(bytes: Uint8Array): BN {
 
         let result = new BN('0');
-
         for (let i = bytes.length - 1; i >= 0; i--) {
             const b = new BN(bytes[i]);
 
             result = result.or(b).shln(i * 8);
         }
+
         return result;
     }
 }

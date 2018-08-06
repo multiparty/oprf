@@ -35,7 +35,7 @@ module.exports = {
   plugins: [{
     apply: (compiler) => {
       compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
-        exec('mv dist-web/dist dist-web/types', (err, stdout, stderr) => {
+        exec('rm -rf dist-web/types && mv dist-web/dist dist-web/types', (err, stdout, stderr) => {
           if (stdout) {
             process.stdout.write(stdout);
           }

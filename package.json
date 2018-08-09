@@ -8,8 +8,8 @@
     "test": "test"
   },
   "scripts": {
-    "compile": "tsc",
-    "webpack": "webpack",
+    "build": "tsc",
+    "build-web": "webpack --mode=production",
     "test": "tslint -c tslint.json --project tsconfig.json && nyc mocha -r ts-node/register -r source-map-support/register test/oprf.spec.ts"
   },
   "nyc": {
@@ -34,8 +34,7 @@
   "homepage": "https://github.com/multiparty/oprf#readme",
   "dependencies": {
     "bn.js": "^4.11.8",
-    "elliptic": "^6.4.0",
-    "libsodium-wrappers-sumo": "^0.7.3"
+    "elliptic": "^6.4.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.4",

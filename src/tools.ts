@@ -107,7 +107,7 @@ export class Tools {
         );
     }
 
-    private is_output_format(format) {
+    public is_output_format(format) {
         const formats = this.output_formats();
         for (const form of formats) {
             if (form === format) {
@@ -117,11 +117,11 @@ export class Tools {
         return false;
     }
 
-    private free(address) {
+    public free(address) {
         libsodium._free(address);
     }
 
-    private free_all(addresses) {
+    public free_all(addresses) {
         if (addresses) {
             for (const address of addresses) {
                 this.free(address);
@@ -129,12 +129,12 @@ export class Tools {
         }
     }
 
-    private free_and_throw_type_error(addressPool, err) {
+    public free_and_throw_type_error(addressPool, err) {
         this.free_all(addressPool);
         throw new TypeError(err);
     }
 
-    private require_defined(addressPool, varValue, varName) {
+    public require_defined(addressPool, varValue, varName) {
         if (varValue === undefined) {
             this.free_and_throw_type_error(
                 addressPool,

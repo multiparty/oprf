@@ -48,7 +48,6 @@ export class OPRF {
     public generateRandomScalar(): BN {
 
         const m: Uint8Array = this.sodium.randombytes_buf(32);
-        
         return this.bytesToBN(m).mod(this.prime);
     }
 

@@ -17,7 +17,7 @@ const prime: BN = (new BN(2)).pow(new BN(252)).add(new BN('277423177773723535358
 function endToEnd(input: string, oprf: OPRF): void {
 
   const masked = oprf.maskInput(input);
-  const saltedPoint = oprf.saltInput(masked.point, scalarKey);
+  const saltedPoint = oprf.scalarMult(masked.point, scalarKey);
   
   const unmasked = oprf.unmaskInput(saltedPoint, masked.mask);
 
@@ -102,6 +102,21 @@ describe('Error Cases', () => {
 
     const point = [1];
 
-    expect(() => oprf.saltInput(point, scalarKey)).to.throw('Input is not a valid ED25519 point.');
+    expect(() => oprf.scalarMult(point, scalarKey)).to.throw('Input is not a valid ED25519 point.');
+  });
+});
+
+describe('Unit tests', () => {
+  it('Encode & decode point', async function() {
+    await _sodium.ready;
+    const oprf = new OPRF(_sodium);
+
+    const point: number[] = oprf.hashToPoint(createRandString());
+    const decoded = oprf.decodePoint(point);
+    const encoded: number[] = oprf.encodePoint(decoded);
+
+    for (let i = 0; i < point.length; i++) {
+      expect(point[i]).to.equal(encoded[i]);
+    }
   });
 });

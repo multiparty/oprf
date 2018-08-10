@@ -30,7 +30,19 @@ export declare class OPRF {
      * @param key private key of server
      * @returns {string} salted point in hex format
      */
-    saltInput(p: number[], key: string): number[];
+    scalarMult(p: number[], key: string): number[];
+    /**
+     * Converts an elliptic.js point to number array representation
+     * @param p elliptic point object
+     * @returns point as a number array
+     */
+    encodePoint(p: any): number[];
+    /**
+     * Converts a number array to elliptic.js point object representation
+     * @param {number[]} p - point in number array representation
+     * @returns point as an elliptic point object
+     */
+    decodePoint(p: number[]): any;
     /**
      * Unmasks a salted value to reveal the original input value salted with a private key
      * @param salted a salted point

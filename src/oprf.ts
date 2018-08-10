@@ -48,7 +48,7 @@ export class OPRF {
     public generateRandomScalar(): BN {
 
         const m: Uint8Array = this.sodium.randombytes_buf(32);
-
+        
         return this.bytesToBN(m).mod(this.prime);
     }
 
@@ -87,7 +87,7 @@ export class OPRF {
      * @param key private key of server
      * @returns {string} salted point in hex format
      */
-    public saltInput(p: number[], key: string): number[] {
+    public scalarMult(p: number[], key: string): number[] {
 
         if (this.isValidPoint(p) === 0) {
             throw new Error('Input is not a valid ED25519 point.');
@@ -98,6 +98,24 @@ export class OPRF {
         const point = this.ed.decodePoint(p);
 
         return this.ed.encodePoint(point.mul(scalar));
+    }
+
+    /**
+     * Converts an elliptic.js point to number array representation
+     * @param p elliptic point object
+     * @returns point as a number array
+     */
+    public encodePoint(p: any): number[] {
+        return this.ed.encodePoint(p);
+    }
+
+    /**
+     * Converts a number array to elliptic.js point object representation
+     * @param {number[]} p - point in number array representation
+     * @returns point as an elliptic point object
+     */
+    public decodePoint(p: number[]): any {
+        return this.ed.decodePoint(p);
     }
 
     /**

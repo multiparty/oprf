@@ -18,7 +18,7 @@ function endToEnd(input: string, oprf: OPRF): void {
 
   const masked = oprf.maskInput(input);
   const saltedPoint = oprf.scalarMult(masked.point, scalarKey);
-  
+
   const unmasked = oprf.unmaskInput(saltedPoint, masked.mask);
 
   const hashed = oprf.hashToPoint(input);
@@ -32,15 +32,15 @@ function endToEnd(input: string, oprf: OPRF): void {
 function createRandString(): string {
 
   const alphabet: string[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-      'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+    'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
   let str: string = '';
   for (let i: number = 0; i < getRandom(128); i++) {
-      const index: number = getRandom(alphabet.length);
-      str += alphabet[index];
+    const index: number = getRandom(alphabet.length);
+    str += alphabet[index];
   }
 
   if (str === '') {
-      str = 'XXXXXX';
+    str = 'XXXXXX';
   }
   return str;
 }
@@ -84,19 +84,19 @@ describe('End-to-End', () => {
 
     const testNum = 25;
     for (var i = 0; i < testNum; i++) {
-        endToEnd(createRandString(), oprf);
+      endToEnd(createRandString(), oprf);
     }
   });
 });
 describe('Error Cases', () => {
-  it('Empty input', async function() {
+  it('Empty input', async function () {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
 
     expect(() => endToEnd('', oprf)).to.throw('Empty input string.');
   });
 
-  it('Point not on curve', async function() {
+  it('Point not on curve', async function () {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
 
@@ -107,7 +107,7 @@ describe('Error Cases', () => {
 });
 
 describe('Unit tests', () => {
-  it('Encode & decode point', async function() {
+  it('Encode & decode point', async function () {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
 

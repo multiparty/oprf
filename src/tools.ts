@@ -1,21 +1,31 @@
-declare var window;
-let sodium;
+// Code based on https://github.com/jedisct1/libsodium.js/blob/master/wrapper/wrap-template.js
+/*
+Copyright (c) 2015-2018
+Ahmad Ben Mrad <batikhsouri at gmail dot org>
+Frank Denis <j at pureftpd dot org>
+Ryan Lester <ryan at cyph dot com>
 
-if (typeof window === 'undefined') {
-    // tslint:disable-next-line:no-var-requires
-    sodium = require('libsodium-wrappers-sumo');
-} else {
-    sodium = window.sodium;
-}
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
 
-const libsodium = sodium.libsodium;
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
 
 export class AllocatedBuf {
     public length = null;
     public address = null;
+    private libsodium = null;
 
-    constructor(length) {
+    constructor(sodium, length) {
 
+        this.libsodium = sodium.libsodium;
         this.length = length;
         this.address = this.malloc(length);
     }
@@ -23,13 +33,13 @@ export class AllocatedBuf {
     public to_Uint8Array() {
         const result = new Uint8Array(this.length);
         result.set(
-            libsodium.HEAPU8.subarray(this.address, this.address + this.length),
+            this.libsodium.HEAPU8.subarray(this.address, this.address + this.length),
         );
         return result;
     }
 
     private malloc(length) {
-        const result = libsodium._malloc(length);
+        const result = this.libsodium._malloc(length);
         if (result === 0) {
             throw {
                 length,
@@ -43,12 +53,18 @@ export class AllocatedBuf {
 // tslint:disable-next-line:max-classes-per-file
 export class Tools {
 
+    private sodium = null;
+
+    constructor(sodium) {
+        this.sodium = sodium;
+    }
+
     public output_formats(): string[] {
         return ['uint8array', 'text', 'hex', 'base64'];
     }
 
     public malloc(length) {
-        const result = libsodium._malloc(length);
+        const result = this.sodium.libsodium._malloc(length);
         if (result === 0) {
             throw {
                 length,
@@ -60,7 +76,7 @@ export class Tools {
 
     public to_allocated_buf_address(bytes) {
         const address = this.malloc(bytes.length);
-        libsodium.HEAPU8.set(bytes, address);
+        this.sodium.libsodium.HEAPU8.set(bytes, address);
         return address;
     }
 
@@ -73,11 +89,11 @@ export class Tools {
             if (selectedOutputFormat === 'uint8array') {
                 return output.to_Uint8Array();
             } else if (selectedOutputFormat === 'text') {
-                return sodium.to_string(output.to_Uint8Array());
+                return this.sodium.to_string(output.to_Uint8Array());
             } else if (selectedOutputFormat === 'hex') {
-                return sodium.to_hex(output.to_Uint8Array());
+                return this.sodium.to_hex(output.to_Uint8Array());
             } else if (selectedOutputFormat === 'base64') {
-                return sodium.to_base64(output.to_Uint8Array());
+                return this.sodium.to_base64(output.to_Uint8Array());
             } else {
                 throw new Error('What is output format "' + selectedOutputFormat + '"?');
             }
@@ -99,7 +115,7 @@ export class Tools {
         if (varValue instanceof Uint8Array) {
             return varValue;
         } else if (typeof varValue === 'string') {
-            return sodium.from_string(varValue);
+            return this.sodium.from_string(varValue);
         }
         this.free_and_throw_type_error(
             addressPool,
@@ -118,7 +134,7 @@ export class Tools {
     }
 
     public free(address) {
-        libsodium._free(address);
+        this.sodium.libsodium._free(address);
     }
 
     public free_all(addresses) {

@@ -17,7 +17,7 @@ export class OPRF {
 
     constructor(sodium) {
         this.sodium = sodium;
-        this.tools = new Tools();
+        this.tools = new Tools(sodium);
     }
 
     /**
@@ -29,7 +29,7 @@ export class OPRF {
         let hash = this.stringToBinary(input);
 
         const addressPool = [];
-        const result = new AllocatedBuf(this.sodium.libsodium._crypto_core_ed25519_uniformbytes());
+        const result = new AllocatedBuf(this.sodium, this.sodium.libsodium._crypto_core_ed25519_uniformbytes());
         const resultAddress = result.address;
         addressPool.push(resultAddress);
 

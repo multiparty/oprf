@@ -1,11 +1,14 @@
 export declare class AllocatedBuf {
     length: any;
     address: any;
-    constructor(length: any);
+    private libsodium;
+    constructor(sodium: any, length: any);
     to_Uint8Array(): Uint8Array;
     private malloc;
 }
 export declare class Tools {
+    private sodium;
+    constructor(sodium: any);
     output_formats(): string[];
     malloc(length: any): any;
     to_allocated_buf_address(bytes: any): any;

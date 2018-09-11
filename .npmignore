@@ -1,9 +1,0 @@
-/node_modules
-/coverage
-/src
-/dist-web
-tsconfig.json
-.nyc_output/
-.DS_Store
-tslint.json
-.idea/

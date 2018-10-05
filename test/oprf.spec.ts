@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import elliptic = require('elliptic');
 import _sodium = require('libsodium-wrappers-sumo');
 import BN = require('bn.js')
+import sinon = require('sinon');
 
 
 const scalarKey = 'a20a9b3c5f5b83a326f50a71e296c2c0161a2660b501e538fe88fb2e740dd3f'
@@ -118,5 +119,14 @@ describe('Unit tests', () => {
     for (let i = 0; i < point.length; i++) {
       expect(point[i]).to.equal(encoded[i]);
     }
+  });
+
+  it('hashToPoint calls generic_hash on libsodium', async function () {
+    await _sodium.ready;
+    const spy = sinon.spy(_sodium, 'crypto_generichash');
+
+    const oprf = new OPRF(_sodium);
+    oprf.hashToPoint(createRandString());
+    expect(spy.called).to.equal(true);
   });
 });

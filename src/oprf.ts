@@ -26,7 +26,7 @@ export class OPRF {
    * @returns {number[]} array of numbers representing a point on the curve ed25519
    */
   public hashToPoint(input: string): number[] {
-    let hash = this.stringToBinary(input);
+    let hash = this.sodium.crypto_generichash(64, this.sodium.from_string(input));
 
     const addressPool = [];
     const result = new AllocatedBuf(this.sodium, this.sodium.libsodium._crypto_core_ed25519_uniformbytes());
@@ -130,27 +130,6 @@ export class OPRF {
     const unmasked = point.mul(inv);
 
     return this.ed.encodePoint(unmasked);
-  }
-
-  /**
-   * Converts the input to a binary string
-   * @param input
-   * @returns {string} a string of 0's and 1's representing the original input
-   */
-  private stringToBinary(input: string): string {
-
-    let result = [];
-    for (let i = 0; i < input.length; i++) {
-      const binaryArr = this.numToBin(input.charCodeAt(i));
-      result = result.concat(binaryArr);
-    }
-
-    let resultString = '';
-    for (const res of result) {
-      resultString += res;
-    }
-
-    return resultString;
   }
 
   /**

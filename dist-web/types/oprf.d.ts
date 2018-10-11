@@ -51,12 +51,6 @@ export declare class OPRF {
      */
     unmaskInput(salted: number[], mask: BN): number[];
     /**
-     * Converts the input to a binary string
-     * @param input
-     * @returns {string} a string of 0's and 1's representing the original input
-     */
-    private stringToBinary;
-    /**
      * Converts a number to its binary representation
      * @param n
      */

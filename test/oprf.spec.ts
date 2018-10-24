@@ -16,15 +16,16 @@ const prime: BN = (new BN(2)).pow(new BN(252)).add(new BN('277423177773723535358
 
 
 function endToEnd(input: string, oprf: OPRF): void {
+  const key = oprf.generateRandomScalar()
 
   const masked = oprf.maskInput(input);
-  const saltedPoint = oprf.scalarMult(masked.point, scalarKey);
+  const saltedPoint = oprf.scalarMult(masked.point, key);
 
   const unmasked = oprf.unmaskInput(saltedPoint, masked.mask);
 
   const hashed = oprf.hashToPoint(input);
   const point = ed.decodePoint(hashed);
-  const scalar = new BN(scalarKey);
+  const scalar = new BN(key);
   const correct = ed.encodePoint(point.mul(scalar));
 
   expect(unmasked).to.deep.equals(correct);
@@ -76,6 +77,37 @@ describe('Elliptic Curve Basics', () => {
 
     expect(original).to.deep.equals(plus1);
   });
+
+  it('End-to-end on specified input and random scalar key', async function() {
+    await _sodium.ready;
+    const oprf = new OPRF(_sodium);
+    const input = 'abcdefghijklmnopr'
+
+    // OPRF
+    const masked = oprf.maskInput(input);
+    const salted = oprf.scalarMult(masked.point, scalarKey);
+    const unmasked = oprf.unmaskInput(salted, masked.mask);
+
+    // scalar mult of input and key
+    const hashedPoint = oprf.hashToPoint(input);
+    const result = oprf.scalarMult(hashedPoint, scalarKey);
+
+    expect(unmasked).to.deep.equals(result);
+  });
+
+  it('Point hashing expected to be deterministic', async function() {
+    await _sodium.ready;
+    const oprf = new OPRF(_sodium);
+    const input = 'abcdefghijklmnoprq'
+
+    // OPRF
+    const hashed = oprf.hashToPoint(input);
+    
+    const correct = [206,243,179,53,28,53,28,158,167,21,11,206,210,150,189,145,98,196,66,220,215,25,92,10,13,146,85,151,34,242,70,248];
+
+    expect(hashed).to.deep.equals(correct);
+  });
+
 });
 
 describe('End-to-End', () => {
@@ -83,7 +115,7 @@ describe('End-to-End', () => {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
 
-    const testNum = 25;
+    const testNum = 100;
     for (var i = 0; i < testNum; i++) {
       endToEnd(createRandString(), oprf);
     }
@@ -105,6 +137,25 @@ describe('Error Cases', () => {
 
     expect(() => oprf.scalarMult(point, scalarKey)).to.throw('Input is not a valid ED25519 point.');
   });
+
+  it('Incorrect mask for unmasking', async function () {
+    await _sodium.ready;
+    const oprf = new OPRF(_sodium);
+    const input = 'abcdefghijklmnopr'
+    // OPRF
+    const masked = oprf.maskInput(input);
+    const salted = oprf.scalarMult(masked.point, scalarKey);
+
+    const masked_fake = oprf.maskInput('abcdef');
+    const unmasked = oprf.unmaskInput(salted, masked_fake.mask);
+
+    // scalar mult of input and key
+    const hashedPoint = oprf.hashToPoint(input);
+    const result = oprf.scalarMult(hashedPoint, scalarKey);
+
+    expect(unmasked).to.not.deep.equals(result);
+  });
+
 });
 
 describe('Unit tests', () => {
@@ -120,6 +171,7 @@ describe('Unit tests', () => {
       expect(point[i]).to.equal(encoded[i]);
     }
   });
+
 
   it('hashToPoint calls generic_hash on libsodium', async function () {
     await _sodium.ready;

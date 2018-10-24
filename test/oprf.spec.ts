@@ -4,6 +4,7 @@ import elliptic = require('elliptic');
 import _sodium = require('libsodium-wrappers-sumo');
 import BN = require('bn.js')
 import sinon = require('sinon');
+import { AssertionError } from 'assert';
 
 
 const scalarKey = 'a20a9b3c5f5b83a326f50a71e296c2c0161a2660b501e538fe88fb2e740dd3f'
@@ -106,6 +107,29 @@ describe('Elliptic Curve Basics', () => {
     const correct = [206,243,179,53,28,53,28,158,167,21,11,206,210,150,189,145,98,196,66,220,215,25,92,10,13,146,85,151,34,242,70,248];
 
     expect(hashed).to.deep.equals(correct);
+  });
+
+
+  it('Point hashing expected to be deterministic', async function() {
+    await _sodium.ready;
+    const oprf = new OPRF(_sodium);
+    const input1 = 'abcdefghijklmnoprq'
+    const input2 = 'abcdefgq'
+
+    const masked1 = oprf.maskInput(input1);
+    const salted1 = oprf.scalarMult(masked1.point, scalarKey);
+    const unmasked1 = oprf.unmaskInput(salted1, masked1.mask);
+    
+    const masked2 = oprf.maskInput(input2);
+    const salted2 = oprf.scalarMult(masked2.point, scalarKey);
+    const unmasked2 = oprf.unmaskInput(salted2, masked2.mask);
+    const unmasked3 = oprf.unmaskInput(salted2, masked1.mask);
+
+    expect(salted1).to.not.deep.equals(salted2);
+    expect(unmasked1).to.not.deep.equals(unmasked2);
+    expect(unmasked3).to.not.deep.equals(unmasked1);
+    expect(unmasked3).to.not.deep.equals(unmasked2);
+
   });
 
 });

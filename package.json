@@ -1,6 +1,6 @@
 {
   "name": "oprf",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "Oblivious pseudo-random function over an elliptic curve (ED25519)",
   "main": "dist/oprf.js",
   "types": "dist/oprf.d.ts",
@@ -13,7 +13,7 @@
   "scripts": {
     "build": "tsc",
     "build-web": "webpack --mode=production",
-    "test": "tslint -c tslint.json --project tsconfig.json && nyc mocha -r ts-node/register -r source-map-support/register test/oprf.spec.ts"
+    "test": "tslint -c tslint.json --project tsconfig.json && nyc mocha --timeout 200000 -r ts-node/register -r source-map-support/register test/oprf.spec.ts"
   },
   "nyc": {
     "extension": [

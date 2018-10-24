@@ -127,11 +127,60 @@ describe('Elliptic Curve Basics', () => {
 
     expect(salted1).to.not.deep.equals(salted2);
     expect(unmasked1).to.not.deep.equals(unmasked2);
+
     expect(unmasked3).to.not.deep.equals(unmasked1);
     expect(unmasked3).to.not.deep.equals(unmasked2);
 
   });
 
+
+  it('Outputs should be different', async function() {
+    await _sodium.ready;
+    const oprf = new OPRF(_sodium);
+    const input1 = 'derp';
+    const input2 = 'doo';
+
+    const key1 = 'a20a9b3c5f5b83a326f50a71e296c2c0161a2660b501e538fe88fb2e740dd3f';
+    const key2 = 'a38ced06f7cf1d2b235ffa81f165924cecddac544c0d915d13cffbe47ea29b5';
+
+    const masked1 = oprf.maskInput(input1);
+    const masked2 = oprf.maskInput(input2);
+
+    const salted1 = oprf.scalarMult(masked1.point, key1);
+    const salted2 = oprf.scalarMult(masked2.point, key2);
+
+    const unmasked1 = oprf.unmaskInput(salted1, masked1.mask);
+    const unmasked2 = oprf.unmaskInput(salted2, masked2.mask);
+
+    expect(unmasked1).to.not.deep.equals(unmasked2);
+
+
+  });
+
+
+  it('Outputs on same input and key should always be deterministic', async function() {
+    await _sodium.ready;
+    const oprf = new OPRF(_sodium);
+    const input = 'derp';
+
+    const key = 'a20a9b3c5f5b83a326f50a71e296c2c0161a2660b501e538fe88fb2e740dd3f';
+
+    const masked1 = oprf.maskInput(input);
+    const masked2 = oprf.maskInput(input);
+    const masked3 = oprf.maskInput(input);
+
+
+    const salted1 = oprf.scalarMult(masked1.point, key);
+    const salted2 = oprf.scalarMult(masked2.point, key);
+    const salted3 = oprf.scalarMult(masked3.point, key)
+
+    const unmasked1 = oprf.unmaskInput(salted1, masked1.mask);
+    const unmasked2 = oprf.unmaskInput(salted2, masked2.mask);
+    const unmasked3 = oprf.unmaskInput(salted3, masked3.mask);
+
+    expect(unmasked1).to.deep.equals(unmasked2).to.deep.equals(unmasked3);
+
+  });
 });
 
 describe('End-to-End', () => {

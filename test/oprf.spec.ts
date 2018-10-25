@@ -1,5 +1,4 @@
 import { OPRF } from '../src/oprf';
-import { AllocatedBuf, Tools } from '../src/tools';
 
 import { expect } from 'chai';
 import elliptic = require('elliptic');
@@ -8,11 +7,10 @@ import BN = require('bn.js')
 import sinon = require('sinon');
 
 const scalarKey = 'a20a9b3c5f5b83a326f50a71e296c2c0161a2660b501e538fe88fb2e740dd3f'
-
 const eddsa = elliptic.eddsa;
 const ed = new eddsa('ed25519');
-
 const prime: BN = (new BN(2)).pow(new BN(252)).add(new BN('27742317777372353535851937790883648493'));
+const NUM_STRESS_TESTS = 50;
 
 // End-to-end test of OPRF functionality using random input and random key
 function endToEnd(input: string, oprf: OPRF): void {
@@ -118,7 +116,7 @@ describe('End-to-End', () => {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
 
-    const testNum = 500;
+    const testNum = NUM_STRESS_TESTS;
     for (var i = 0; i < testNum; i++) {
       endToEnd(createRandString(), oprf);
     }
@@ -278,8 +276,4 @@ describe('Error Cases', () => {
 
     expect(unmasked).to.not.deep.equals(result);
   });
-
-  // describe('Tools Unit Tests', () => {
-    
-  // });
 });

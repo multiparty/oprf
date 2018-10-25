@@ -130,7 +130,7 @@ export class OPRF {
 
     return this.ed.encodePoint(unmasked);
   }
-  
+
   /**
    * Converts an array of numbers to its big number representation
    * @param bytes

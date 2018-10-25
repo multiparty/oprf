@@ -1,4 +1,6 @@
 import { OPRF } from '../src/oprf';
+import { AllocatedBuf, Tools } from '../src/tools';
+
 import { expect } from 'chai';
 import elliptic = require('elliptic');
 import _sodium = require('libsodium-wrappers-sumo');
@@ -105,8 +107,9 @@ describe('Elliptic Curve Unit Tests', () => {
 
     const oprf = new OPRF(_sodium);
 
-    expect(oprf.generateRandomScalar()).to.not.deep.equals(oprf.generateRandomScalar()).to.not.deep.equals(oprf.generateRandomScalar());
-
+    expect(oprf.generateRandomScalar())
+               .to.not.deep.equals(oprf.generateRandomScalar())
+               .to.not.deep.equals(oprf.generateRandomScalar());
   });
 });
 
@@ -276,4 +279,7 @@ describe('Error Cases', () => {
     expect(unmasked).to.not.deep.equals(result);
   });
 
+  // describe('Tools Unit Tests', () => {
+    
+  // });
 });

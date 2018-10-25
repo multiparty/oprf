@@ -46,7 +46,6 @@ export class OPRF {
   }
 
   public generateRandomScalar(): BN {
-
     const m: Uint8Array = this.sodium.randombytes_buf(32);
     return this.bytesToBN(m).mod(this.prime);
   }
@@ -131,28 +130,7 @@ export class OPRF {
 
     return this.ed.encodePoint(unmasked);
   }
-
-  /**
-   * Converts a number to its binary representation
-   * @param n
-   */
-  private numToBin(n: number): object {
-
-    const result = [];
-    while (n > 0) {
-      const bit = Math.floor(n % 2) !== 0 ? 1 : 0;
-      result.unshift(bit);
-
-      n = Math.floor(n / 2);
-    }
-
-    while (result.length !== 8) {
-      result.unshift(0);
-    }
-
-    return result;
-  }
-
+  
   /**
    * Converts an array of numbers to its big number representation
    * @param bytes

@@ -1,6 +1,6 @@
 {
   "name": "oprf",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "Oblivious pseudo-random function over an elliptic curve (ED25519)",
   "main": "dist/oprf.js",
   "types": "dist/oprf.d.ts",

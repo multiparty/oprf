@@ -45,6 +45,10 @@ export class OPRF {
     return Array.from(res);
   }
 
+  /**
+   * Generates a random 32-byte array of numbers
+   * @returns {BN}
+   */
   public generateRandomScalar(): BN {
     const m: Uint8Array = this.sodium.randombytes_buf(32);
     return this.bytesToBN(m).mod(this.prime);
@@ -55,7 +59,7 @@ export class OPRF {
    * @param input
    * @returns {IMaskedData} the original input in the form of a masked point and the mask
    */
-  public maskInput(input: string): IMaskedData {
+   public maskInput(input: string): IMaskedData {
 
     if (input.length <= 0) {
       throw new Error('Empty input string.');
@@ -72,6 +76,10 @@ export class OPRF {
     return {point: maskedPoint, mask};
   }
 
+  /**
+   * Returns whether the given point exists on the elliptic curve
+   * @param p point input
+   */
   public isValidPoint(p: number[]): number {
 
     const point = new Uint8Array(p);
@@ -117,14 +125,14 @@ export class OPRF {
   }
 
   /**
-   * Unmasks a salted value to reveal the original input value salted with a private key
+   * Applies the multiplicative inverse of the mask to the masked point
    * @param salted a salted point
    * @param mask the original mask that was applied
    * @returns {number[]} the resulting value from the OPRF
    */
-  public unmaskInput(salted: number[], mask: BN): number[] {
+  public unmaskInput(maskedPoint: number[], mask: BN): number[] {
 
-    const point = this.ed.decodePoint(salted);
+    const point = this.ed.decodePoint(maskedPoint);
     const inv = mask.invm(this.prime);
     const unmasked = point.mul(inv);
 

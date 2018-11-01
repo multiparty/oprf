@@ -22,7 +22,8 @@
     "exclude": [
       "**/*.d.ts",
       "**/*.js",
-      "**/*.spec.ts"
+      "**/*.spec.ts",
+      "src/tools.ts"
     ]
   },
   "repository": {

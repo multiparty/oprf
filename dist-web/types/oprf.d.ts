@@ -16,6 +16,10 @@ export declare class OPRF {
      * @returns {number[]} array of numbers representing a point on the curve ed25519
      */
     hashToPoint(input: string): number[];
+    /**
+     * Generates a random 32-byte array of numbers
+     * @returns {BN}
+     */
     generateRandomScalar(): BN;
     /**
      * Hashes input as a point on an elliptic curve and applies a random mask to it
@@ -23,6 +27,10 @@ export declare class OPRF {
      * @returns {IMaskedData} the original input in the form of a masked point and the mask
      */
     maskInput(input: string): IMaskedData;
+    /**
+     * Returns whether the given point exists on the elliptic curve
+     * @param p point input
+     */
     isValidPoint(p: number[]): number;
     /**
      * Salts a point using a key as a scalar
@@ -44,17 +52,12 @@ export declare class OPRF {
      */
     decodePoint(p: number[]): any;
     /**
-     * Unmasks a salted value to reveal the original input value salted with a private key
+     * Applies the multiplicative inverse of the mask to the masked point
      * @param salted a salted point
      * @param mask the original mask that was applied
      * @returns {number[]} the resulting value from the OPRF
      */
-    unmaskInput(salted: number[], mask: BN): number[];
-    /**
-     * Converts a number to its binary representation
-     * @param n
-     */
-    private numToBin;
+    unmaskInput(maskedPoint: number[], mask: BN): number[];
     /**
      * Converts an array of numbers to its big number representation
      * @param bytes

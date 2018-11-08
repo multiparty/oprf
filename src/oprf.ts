@@ -50,8 +50,12 @@ export class OPRF {
    * @returns {BN}
    */
   public generateRandomScalar(): BN {
-    const m: Uint8Array = this.sodium.randombytes_buf(32);
-    return this.bytesToBN(m).mod(this.prime);
+    let m: Uint8Array = null;
+    do {
+      m = this.sodium.randombytes_buf(32);
+    } while (m >= this.prime);
+
+    return this.bytesToBN(m);
   }
 
   /**

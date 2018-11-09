@@ -26,7 +26,10 @@ export class OPRF {
    * @returns {number[]} array of numbers representing a point on the curve ed25519
    */
   public hashToPoint(input: string): number[] {
-    let hash = this.sodium.crypto_generichash(64, this.sodium.from_string(input));
+    let hash = this.sodium.crypto_generichash(
+      this.sodium.libsodium._crypto_core_ed25519_uniformbytes(),
+      this.sodium.from_string(input)
+    );
 
     const addressPool = [];
     const result = new AllocatedBuf(this.sodium, this.sodium.libsodium._crypto_core_ed25519_uniformbytes());
@@ -63,7 +66,7 @@ export class OPRF {
    * @param input
    * @returns {IMaskedData} the original input in the form of a masked point and the mask
    */
-   public maskInput(input: string): IMaskedData {
+  public maskInput(input: string): IMaskedData {
 
     if (input.length <= 0) {
       throw new Error('Empty input string.');

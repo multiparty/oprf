@@ -6,7 +6,7 @@ import _sodium = require('libsodium-wrappers-sumo');
 import BN = require('bn.js')
 import sinon = require('sinon');
 
-const scalarKey = 'a20a9b3c5f5b83a326f50a71e296c2c0161a2660b501e538fe88fb2e740dd3f'
+const scalarKey = 'a20a9b3c5f5b83a326f50a71e296c2c0161a2660b501e538fe88fb2e740dd3f';
 const eddsa = elliptic.eddsa;
 const ed = new eddsa('ed25519');
 const prime: BN = (new BN(2)).pow(new BN(252)).add(new BN('27742317777372353535851937790883648493'));
@@ -14,7 +14,7 @@ const NUM_STRESS_TESTS = 50;
 
 // End-to-end test of OPRF functionality using random input and random key
 function endToEnd(input: string, oprf: OPRF): void {
-  const key = oprf.generateRandomScalar()
+  const key = oprf.generateRandomScalar();
 
   const masked = oprf.maskInput(input);
   const saltedPoint = oprf.scalarMult(masked.point, key);
@@ -91,13 +91,14 @@ describe('Elliptic Curve Unit Tests', () => {
   });
 
 
-  it('hashToPoint calls generic_hash on libsodium', async function () {
+  it('hashToPoint calls generic_hash on libsodium with ed25519 length', async function () {
     await _sodium.ready;
     const spy = sinon.spy(_sodium, 'crypto_generichash');
 
     const oprf = new OPRF(_sodium);
     oprf.hashToPoint(createRandString());
-    expect(spy.called).to.equal(true);
+    expect(spy.calledOnce).to.equal(true);
+    expect(spy.args[0][0]).to.equal(_sodium.libsodium._crypto_core_ed25519_uniformbytes());
   });
 
   it('Scalars should be distinct', async function () {
@@ -106,8 +107,8 @@ describe('Elliptic Curve Unit Tests', () => {
     const oprf = new OPRF(_sodium);
 
     expect(oprf.generateRandomScalar())
-               .to.not.deep.equals(oprf.generateRandomScalar())
-               .to.not.deep.equals(oprf.generateRandomScalar());
+      .to.not.deep.equals(oprf.generateRandomScalar())
+      .to.not.deep.equals(oprf.generateRandomScalar());
   });
 });
 
@@ -116,16 +117,15 @@ describe('End-to-End', () => {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
 
-    const testNum = NUM_STRESS_TESTS;
-    for (var i = 0; i < testNum; i++) {
+    for (let i = 0; i < NUM_STRESS_TESTS; i++) {
       endToEnd(createRandString(), oprf);
     }
   });
 
-  it('End-to-end on specified input, set scalar key, and known result', async function() {
+  it('End-to-end on specified input, set scalar key, and known result', async function () {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
-    const input = 'abcdefghijklmnopr'
+    const input = 'abcdefghijklmnopr';
 
     // OPRF
     const masked = oprf.maskInput(input);
@@ -136,14 +136,14 @@ describe('End-to-End', () => {
     const hashedPoint = oprf.hashToPoint(input);
     const result = oprf.scalarMult(hashedPoint, scalarKey);
 
-    const known_result = [9,134,155,93,112,89,55,30,156,209,106,30,155,11,159,200,66,97,246,95,162,156,132,211,88,94,136,150,93,54,240,115]
+    const known_result = [104, 232, 164, 133, 219, 182, 80, 68, 105, 227, 199, 179, 193, 54, 190, 2, 98, 151, 102, 236, 117, 228, 252, 88, 186, 89, 224, 226, 27, 186, 238, 126];
     expect(unmasked).to.deep.equals(result).to.deep.equals(known_result);
   });
 
-  it('End-to-end on specified input and random scalar key', async function() {
+  it('End-to-end on specified input and random scalar key', async function () {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
-    const input = 'abcdefghijklmnopr'
+    const input = 'abcdefghijklmnopr';
 
     // OPRF
     const masked = oprf.maskInput(input);
@@ -160,28 +160,28 @@ describe('End-to-End', () => {
 
 describe('Expected Behavior', () => {
 
-  it('Point hashing expected to be deterministic', async function() {
+  it('Point hashing expected to be deterministic', async function () {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
-    const input = 'abcdefghijklmnoprq'
+    const input = 'abcdefghijklmnoprq';
 
     const hashed = oprf.hashToPoint(input);
-    const known_output = [206,243,179,53,28,53,28,158,167,21,11,206,210,150,189,145,98,196,66,220,215,25,92,10,13,146,85,151,34,242,70,248];
+    const known_output = [81, 144, 103, 12, 155, 158, 222, 243, 119, 150, 177, 39, 111, 91, 24, 163, 29, 216, 137, 4, 133, 127, 49, 203, 175, 125, 202, 249, 108, 166, 36, 45];
 
     expect(hashed).to.deep.equals(known_output);
   });
 
 
-  it('Inputs map to distinct results', async function() {
+  it('Inputs map to distinct results', async function () {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
-    const input1 = 'abcdefghijklmnoprq'
-    const input2 = 'abcdefgq'
+    const input1 = 'abcdefghijklmnoprq';
+    const input2 = 'abcdefgq';
 
     const masked1 = oprf.maskInput(input1);
     const salted1 = oprf.scalarMult(masked1.point, scalarKey);
     const unmasked1 = oprf.unmaskInput(salted1, masked1.mask);
-    
+
     const masked2 = oprf.maskInput(input2);
     const salted2 = oprf.scalarMult(masked2.point, scalarKey);
     const unmasked2 = oprf.unmaskInput(salted2, masked2.mask);
@@ -197,7 +197,7 @@ describe('Expected Behavior', () => {
     expect(incorrectMaskOutput).to.not.deep.equals(unmasked2);
   });
 
-  it('Different keys should produce different results on same input', async function() {
+  it('Different keys should produce different results on same input', async function () {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
     const input1 = 'derp';
@@ -216,7 +216,7 @@ describe('Expected Behavior', () => {
     expect(unmasked1).to.not.deep.equals(unmasked2);
   });
 
-  it('Outputs on same input and key should always be deterministic', async function() {
+  it('Outputs on same input and key should always be deterministic', async function () {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
     const input = 'derp';
@@ -230,13 +230,13 @@ describe('Expected Behavior', () => {
 
     const salted1 = oprf.scalarMult(masked1.point, key);
     const salted2 = oprf.scalarMult(masked2.point, key);
-    const salted3 = oprf.scalarMult(masked3.point, key)
+    const salted3 = oprf.scalarMult(masked3.point, key);
 
     const unmasked1 = oprf.unmaskInput(salted1, masked1.mask);
     const unmasked2 = oprf.unmaskInput(salted2, masked2.mask);
     const unmasked3 = oprf.unmaskInput(salted3, masked3.mask);
 
-    const known_output = [ 159,2,54,226,74,122,112,171,84,208,65,242,177,111,38,95,46,22,133,110,31,144,150,189,97,58,12,112,217,33,235,89 ]
+    const known_output = [44,  245,  118,  84,  55,  249,  213,  84,  216,  193,  217,  165,  140,  215,  79,  3,  249,  81,  22,  79,  170,  98,  92,  55,  88,  56,  55,  186,  101,  169,  232,  31];
 
     expect(unmasked1).to.deep.equals(unmasked2).to.deep.equals(unmasked3).to.deep.equals(known_output);
   });
@@ -262,7 +262,7 @@ describe('Error Cases', () => {
   it('Incorrect mask for unmasking', async function () {
     await _sodium.ready;
     const oprf = new OPRF(_sodium);
-    const input = 'abcdefghijklmnopr'
+    const input = 'abcdefghijklmnopr';
     // OPRF
     const masked = oprf.maskInput(input);
     const salted = oprf.scalarMult(masked.point, scalarKey);

@@ -1,5 +1,8 @@
 # OPRF
 [![npm version](https://badge.fury.io/js/oprf.svg)](https://badge.fury.io/js/oprf) 
+[![Build Status](https://travis-ci.org/multiparty/oprf.svg?branch=master)](https://travis-ci.org/multiparty/oprf)
+[![Coverage Status](https://coveralls.io/repos/github/multiparty/oprf/badge.svg?branch=master)](https://coveralls.io/github/multiparty/oprf?branch=master)
+
 #### Oblivious pseudo-random function over an elliptic curve (ED25519)
 
 

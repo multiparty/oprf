@@ -26,18 +26,19 @@ export class OPRF {
    * @returns {number[]} array of numbers representing a point on the curve ed25519
    */
   public hashToPoint(input: string): number[] {
-    let hash = this.sodium.crypto_generichash(
+    let hash: Uint8Array = this.sodium.crypto_generichash(
       this.sodium.libsodium._crypto_core_ed25519_uniformbytes(),
       this.sodium.from_string(input)
     );
 
-    const addressPool = [];
-    const result = new AllocatedBuf(this.sodium, this.sodium.libsodium._crypto_core_ed25519_uniformbytes());
-    const resultAddress = result.address;
+    const addressPool: number[] = [];
+    const result: AllocatedBuf = new AllocatedBuf(this.sodium,
+      this.sodium.libsodium._crypto_core_ed25519_uniformbytes());
+    const resultAddress: number = result.address;
     addressPool.push(resultAddress);
 
     hash = this.tools.any_to_Uint8Array(addressPool, hash, 'hash');
-    const hashAddress = this.tools.to_allocated_buf_address(hash);
+    const hashAddress: number = this.tools.to_allocated_buf_address(hash);
     addressPool.push(hashAddress);
 
     this.sodium.libsodium._crypto_core_ed25519_from_uniform(resultAddress, hashAddress);
@@ -73,11 +74,11 @@ export class OPRF {
     }
 
     const hashed: number[] = this.hashToPoint(input);
-    // elliptic.js point
+    // point: elliptic point
     const point = this.ed.decodePoint(hashed);
     const maskBuffer: Uint8Array = this.sodium.randombytes_buf(32);
     const mask: BN = this.bytesToBN(maskBuffer).mod(this.prime);
-    // elliptic.js point
+    // maskedPoint: elliptic point
     const maskedPoint = this.ed.encodePoint(point.mul(mask));
 
     return {point: maskedPoint, mask};
@@ -85,63 +86,63 @@ export class OPRF {
 
   /**
    * Returns whether the given point exists on the elliptic curve
-   * @param p point input
+   * @param point elliptic point input
    */
-  public isValidPoint(p: number[]): number {
+  public isValidPoint(point: number[]): number {
 
-    const point = new Uint8Array(p);
+    const p: Uint8Array = new Uint8Array(point);
 
-    return this.sodium.libsodium._crypto_core_ed25519_is_valid_point(point);
+    return this.sodium.libsodium._crypto_core_ed25519_is_valid_point(p);
   }
 
   /**
    * Salts a point using a key as a scalar
-   * @param p hex string representing a masked point
+   * @param point number array representation of a masked point
    * @param key private key of server
    * @returns {string} salted point in hex format
    */
-  public scalarMult(p: number[], key: string): number[] {
+  public scalarMult(point: number[], key: string): number[] {
 
-    if (this.isValidPoint(p) === 0) {
+    if (this.isValidPoint(point) === 0) {
       throw new Error('Input is not a valid ED25519 point.');
     }
 
     const scalar: BN = new BN(key);
-    // elliptic.js point
-    const point = this.ed.decodePoint(p);
+    // point: elliptic point
+    const p = this.ed.decodePoint(point);
 
-    return this.ed.encodePoint(point.mul(scalar));
+    return this.ed.encodePoint(p.mul(scalar));
   }
 
   /**
    * Converts an elliptic.js point to number array representation
-   * @param p elliptic point object
+   * @param point elliptic point object
    * @returns point as a number array
    */
-  public encodePoint(p: any): number[] {
-    return this.ed.encodePoint(p);
+  public encodePoint(point: any): number[] {
+    return this.ed.encodePoint(point);
   }
 
   /**
    * Converts a number array to elliptic.js point object representation
-   * @param {number[]} p - point in number array representation
+   * @param {number[]} point - point in number array representation
    * @returns point as an elliptic point object
    */
-  public decodePoint(p: number[]): any {
-    return this.ed.decodePoint(p);
+  public decodePoint(point: number[]): any {
+    return this.ed.decodePoint(point);
   }
 
   /**
    * Applies the multiplicative inverse of the mask to the masked point
-   * @param salted a salted point
-   * @param mask the original mask that was applied
-   * @returns {number[]} the resulting value from the OPRF
+   * @param maskedPoint a masked point
+   * @param mask the original mask that was applied to the masked point
+   * @returns {number[]} the resulting unmasked value
    */
   public unmaskInput(maskedPoint: number[], mask: BN): number[] {
-
+    // point: elliptic point
     const point = this.ed.decodePoint(maskedPoint);
-    const inv = mask.invm(this.prime);
-    const unmasked = point.mul(inv);
+    const inv: BN = mask.invm(this.prime);
+    const unmasked: BN = point.mul(inv);
 
     return this.ed.encodePoint(unmasked);
   }

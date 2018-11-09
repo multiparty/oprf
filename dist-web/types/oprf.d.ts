@@ -29,33 +29,33 @@ export declare class OPRF {
     maskInput(input: string): IMaskedData;
     /**
      * Returns whether the given point exists on the elliptic curve
-     * @param p point input
+     * @param point elliptic point input
      */
-    isValidPoint(p: number[]): number;
+    isValidPoint(point: number[]): number;
     /**
      * Salts a point using a key as a scalar
-     * @param p hex string representing a masked point
+     * @param point number array representation of a masked point
      * @param key private key of server
      * @returns {string} salted point in hex format
      */
-    scalarMult(p: number[], key: string): number[];
+    scalarMult(point: number[], key: string): number[];
     /**
      * Converts an elliptic.js point to number array representation
-     * @param p elliptic point object
+     * @param point elliptic point object
      * @returns point as a number array
      */
-    encodePoint(p: any): number[];
+    encodePoint(point: any): number[];
     /**
      * Converts a number array to elliptic.js point object representation
-     * @param {number[]} p - point in number array representation
+     * @param {number[]} point - point in number array representation
      * @returns point as an elliptic point object
      */
-    decodePoint(p: number[]): any;
+    decodePoint(point: number[]): any;
     /**
      * Applies the multiplicative inverse of the mask to the masked point
-     * @param salted a salted point
-     * @param mask the original mask that was applied
-     * @returns {number[]} the resulting value from the OPRF
+     * @param maskedPoint a masked point
+     * @param mask the original mask that was applied to the masked point
+     * @returns {number[]} the resulting unmasked value
      */
     unmaskInput(maskedPoint: number[], mask: BN): number[];
     /**

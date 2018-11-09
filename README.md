@@ -29,7 +29,7 @@ Contains a masked point and the mask that was applied to it
 ```Typescript
 export interface IMaskedData {
   readonly point: number[];
-  readonly mask: BN;
+  readonly mask: BN; // big number
 }
 ```
 
@@ -40,7 +40,7 @@ public hashToPoint(input: string): number[]
 ```
 **maskInput**: hashes string input as a point on an elliptic curve and applies a random mask to it
 ```Typescript
-public maskInput(input: string): maskedData
+public maskInput(input: string): IMaskedData
 ```
 **generateRandomScalar**: generates a random 32-byte array of numbers
 ```Typescript
@@ -48,15 +48,15 @@ public generateRandomScalar(): BN
 ```
 **isValidPoint**: returns whether the given point exists on the elliptic curve
 ```Typescript
-public isValidPoint(p: number[]): number
+public isValidPoint(point: number[]): number
 ```
 **encodePoint**: converts an elliptic.js point representation to number array representation
 ```Typescript
-public encodePoint(p: any): number[]
+public encodePoint(point: any): number[]
 ```
 **decodePoint**: converts a number array to elliptic.js point object representation
 ```Typescript
-public decodePoint(p: number[]): any 
+public decodePoint(point: number[]): any 
 ```
 **unmaskInput**: applies the multiplicative inverse of the mask to the masked point
 ```Typescript
@@ -80,6 +80,7 @@ const salted = oprf.scalarMult(maskedPoint, secretKey);
 
 // Send salted back to the client
 ```
+
 3.) **Client**: unmask the salted point from the server to get a high-entropy output
 ```Typescript
 // Make sure that masked.mask corresponds to the original mask used. 

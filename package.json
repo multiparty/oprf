@@ -38,30 +38,30 @@
   },
   "homepage": "https://github.com/multiparty/oprf#readme",
   "dependencies": {
-    "bn.js": "^4.11.8",
-    "coveralls": "^3.0.2",
-    "elliptic": "^6.4.0"
+    "bn.js": "5.0.0",
+    "elliptic": "6.5.1"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.4",
-    "@types/mocha": "^5.2.3",
-    "@types/node": "^10.3.6",
-    "chai": "^4.1.2",
-    "libsodium-wrappers-sumo": "^0.7.3",
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.14.13",
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.4",
+    "libsodium-wrappers-sumo": "0.7.3",
     "mocha": "^5.2.0",
-    "nyc": "^12.0.2",
-    "sinon": "^6.3.5",
+    "nyc": "^14.1.1",
+    "sinon": "^7.3.2",
     "source-map-support": "^0.5.6",
-    "ts-loader": "^4.4.2",
+    "ts-loader": "^4.5.0",
     "ts-node": "^7.0.0",
-    "tslint": "^5.10.0",
-    "typedoc": "^0.13.0",
+    "tslint": "^5.18.0",
+    "typedoc": "^0.15.0",
     "types-bn": "0.0.1",
     "typescript": "^2.9.2",
-    "webpack": "^4.14.0",
-    "webpack-cli": "^3.0.8"
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.9"
   },
   "peerDependencies": {
-    "libsodium-wrappers-sumo": "^0.7.3"
+    "libsodium-wrappers-sumo": "0.7.3"
   }
 }

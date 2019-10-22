@@ -136,7 +136,7 @@ describe('End-to-End', () => {
     const hashedPoint = oprf.hashToPoint(input);
     const result = oprf.scalarMult(hashedPoint, scalarKey);
 
-    const known_result = [104, 232, 164, 133, 219, 182, 80, 68, 105, 227, 199, 179, 193, 54, 190, 2, 98, 151, 102, 236, 117, 228, 252, 88, 186, 89, 224, 226, 27, 186, 238, 126];
+    const known_result = [67, 211, 62, 241, 3, 58, 144, 120, 39, 14, 255, 148, 90, 209, 115, 56, 238, 5, 58, 143, 33, 206, 223, 209, 240, 173, 177, 214, 71, 88, 131, 222];
     expect(unmasked).to.deep.equals(result).to.deep.equals(known_result);
   });
 
@@ -236,7 +236,7 @@ describe('Expected Behavior', () => {
     const unmasked2 = oprf.unmaskInput(salted2, masked2.mask);
     const unmasked3 = oprf.unmaskInput(salted3, masked3.mask);
 
-    const known_output = [44,  245,  118,  84,  55,  249,  213,  84,  216,  193,  217,  165,  140,  215,  79,  3,  249,  81,  22,  79,  170,  98,  92,  55,  88,  56,  55,  186,  101,  169,  232,  31];
+    const known_output = [221, 1, 0, 60, 186, 172, 201, 218, 147, 12, 254, 230, 80, 113, 61, 205, 21, 27, 0, 213, 57, 192, 34, 56, 82, 185, 185, 153, 8, 250, 191, 19];
 
     expect(unmasked1).to.deep.equals(unmasked2).to.deep.equals(unmasked3).to.deep.equals(known_output);
   });

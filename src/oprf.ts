@@ -98,7 +98,7 @@ export class OPRF {
   /**
    * Salts a point using a key as a scalar
    * @param point number array representation of a masked point
-   * @param key private key of server
+   * @param key private key of server in hex format
    * @returns {string} salted point in hex format
    */
   public scalarMult(point: number[], key: string): number[] {
@@ -107,7 +107,7 @@ export class OPRF {
       throw new Error('Input is not a valid ED25519 point.');
     }
 
-    const scalar: BN = new BN(key);
+    const scalar: BN = new BN(key, 16);
     // point: elliptic point
     const p = this.ed.decodePoint(point);
 

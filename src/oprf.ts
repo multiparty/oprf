@@ -1,23 +1,28 @@
-import BN = require('bn.js');
-import elliptic = require('elliptic');
-import { AllocatedBuf, Tools } from './tools';
+// @ts-ignore
+import sodium = require('libsodium-wrappers-sumo');
 
 export interface IMaskedData {
-  readonly point: number[];
-  readonly mask: BN;
+  readonly point: Uint8Array;
+  readonly mask: Uint8Array;
 }
 
 export class OPRF {
-  private sodium = null;
-  private tools: Tools = null;
+  /**
+   * Promise that is resolved when the libsodium wrappers have been loaded
+   * It is unsafe to use OPRF before this promise is resolved
+   * @property {Promise}
+   */
+  public ready: Promise<null> = null;
 
-  private eddsa = elliptic.eddsa;
-  private ed = new this.eddsa('ed25519');
-  private prime: BN = (new BN(2)).pow(new BN(252)).add(new BN('27742317777372353535851937790883648493'));
+  /**
+   * Exposes sodium wrappers sumo
+   * @property {sodium}
+   */
+  public sodium: sodium = null;
 
-  constructor(sodium) {
+  constructor() {
+    this.ready = sodium.ready;
     this.sodium = sodium;
-    this.tools = new Tools(sodium);
   }
 
   /**
@@ -25,142 +30,127 @@ export class OPRF {
    * @param {string} input
    * @returns {number[]} array of numbers representing a point on the curve ed25519
    */
-  public hashToPoint(input: string): number[] {
-    let hash: Uint8Array = this.sodium.crypto_generichash(
-      this.sodium.libsodium._crypto_core_ed25519_uniformbytes(),
-      this.sodium.from_string(input)
-    );
-
-    const addressPool: number[] = [];
-    const result: AllocatedBuf = new AllocatedBuf(this.sodium,
-      this.sodium.libsodium._crypto_core_ed25519_uniformbytes());
-    const resultAddress: number = result.address;
-    addressPool.push(resultAddress);
-
-    hash = this.tools.any_to_Uint8Array(addressPool, hash, 'hash');
-    const hashAddress: number = this.tools.to_allocated_buf_address(hash);
-    addressPool.push(hashAddress);
-
-    this.sodium.libsodium._crypto_core_ed25519_from_uniform(resultAddress, hashAddress);
-    const res = this.tools.format_output(result, 'uint8array');
-
-    this.tools.free_all(addressPool);
-
-    return Array.from(res);
+  public hashToPoint(input: string): Uint8Array {
+    const hash = sodium.crypto_generichash(sodium.crypto_core_ristretto255_HASHBYTES, sodium.from_string(input));
+    return sodium.crypto_core_ristretto255_from_hash(hash);
   }
 
   /**
-   * Generates a random 32-byte array of numbers
-   * @returns {BN}
+   * Generates a random number uniform in [1, ORDER OF CURVE).
+   * @returns {Uint8Array}
    */
-  public generateRandomScalar(): BN {
-    let m: BN = null;
-    do {
-      m = this.bytesToBN(this.sodium.randombytes_buf(32));
-    } while (m >= this.prime);
-
-    return m;
+  public generateRandomScalar(): Uint8Array {
+    return sodium.crypto_core_ristretto255_scalar_random();
   }
 
   /**
    * Hashes input as a point on an elliptic curve and applies a random mask to it
-   * @param input
-   * @returns {IMaskedData} the original input in the form of a masked point and the mask
+   * @param {string} input
+   * @returns {IMaskedData} a masked point and the mask
    */
   public maskInput(input: string): IMaskedData {
-
     if (input.length <= 0) {
       throw new Error('Empty input string.');
     }
 
-    const hashed: number[] = this.hashToPoint(input);
-    // point: elliptic point
-    const point = this.ed.decodePoint(hashed);
-    const maskBuffer: Uint8Array = this.sodium.randombytes_buf(32);
-    const mask: BN = this.bytesToBN(maskBuffer).mod(this.prime);
-    // maskedPoint: elliptic point
-    const maskedPoint = this.ed.encodePoint(point.mul(mask));
+    const point: Uint8Array = this.hashToPoint(input);
+    return this.maskPoint(point);
+  }
 
+  /**
+   * Masks a point with a random mask and returns both masked point and mask
+   * @param {Uint8Array} input
+   * @returns {IMaskedData} a masked point and the mask
+   */
+  public maskPoint(point: Uint8Array): IMaskedData {
+    const mask: Uint8Array = this.generateRandomScalar();
+    const maskedPoint = this.scalarMult(point, mask);
     return {point: maskedPoint, mask};
   }
 
   /**
-   * Returns whether the given point exists on the elliptic curve
-   * @param point elliptic point input
+   * Applies the multiplicative inverse of the mask to the masked point
+   * @param {Uint8Array} maskedPoint - a masked point
+   * @param {Uint8Array} mask - the original mask that was applied to the masked point
+   * @returns {Uint8Array} the resulting unmasked value
    */
-  public isValidPoint(point: number[]): number {
-
-    const p: Uint8Array = new Uint8Array(point);
-
-    return this.sodium.libsodium._crypto_core_ed25519_is_valid_point(p);
+  public unmaskPoint(maskedPoint: Uint8Array, mask: Uint8Array): Uint8Array {
+    const maskInv: Uint8Array = sodium.crypto_core_ristretto255_scalar_invert(mask);
+    return this.scalarMult(maskedPoint, maskInv);
   }
 
   /**
    * Salts a point using a key as a scalar
-   * @param point number array representation of a masked point
-   * @param key private key of server in hex format
-   * @returns {string} salted point in hex format
+   * @param {Uint8Array} point - a point (usually masked)
+   * @param {Uint8Array} key - a scalar (usually PRF key)
+   * @returns {Uint8Array} salted point
    */
-  public scalarMult(point: number[], key: string): number[] {
-
-    if (this.isValidPoint(point) === 0) {
-      throw new Error('Input is not a valid ED25519 point.');
+  public scalarMult(point: Uint8Array, key: Uint8Array): Uint8Array {
+    if (!this.isValidPoint(point)) {
+      throw new Error('Input is not a valid Ristretto255 point.');
     }
 
-    const scalar: BN = new BN(key, 16);
-    // point: elliptic point
-    const p = this.ed.decodePoint(point);
-
-    return this.ed.encodePoint(p.mul(scalar));
+    return sodium.crypto_scalarmult_ristretto255(key, point);
   }
 
   /**
-   * Converts an elliptic.js point to number array representation
-   * @param point elliptic point object
-   * @returns point as a number array
+   * Returns whether the given point exists on the elliptic curve
+   * @param {Uint8Array} point
+   * @returns {boolean} true if the point is a valid point, false otherwise
    */
-  public encodePoint(point: any): number[] {
-    return this.ed.encodePoint(point);
+  public isValidPoint(point: Uint8Array): boolean {
+    return sodium.crypto_core_ristretto255_is_valid_point(point);
   }
 
   /**
-   * Converts a number array to elliptic.js point object representation
-   * @param {number[]} point - point in number array representation
-   * @returns point as an elliptic point object
+   * Encodes a point representation to a string with either 'ASCII' or 'UTF-8' encoding
+   * @param {Uint8Array} point - the point to encode
+   * @param {string} [encoding=UTF-8] - can be either 'UTF-8', or 'ASCII' (extended ASCII)
+   * @returns {string} a compact string representing the point
    */
-  public decodePoint(point: number[]): any {
-    return this.ed.decodePoint(point);
-  }
-
-  /**
-   * Applies the multiplicative inverse of the mask to the masked point
-   * @param maskedPoint a masked point
-   * @param mask the original mask that was applied to the masked point
-   * @returns {number[]} the resulting unmasked value
-   */
-  public unmaskInput(maskedPoint: number[], mask: BN): number[] {
-    // point: elliptic point
-    const point = this.ed.decodePoint(maskedPoint);
-    const inv: BN = mask.invm(this.prime);
-    const unmasked: BN = point.mul(inv);
-
-    return this.ed.encodePoint(unmasked);
-  }
-
-  /**
-   * Converts an array of numbers to its big number representation
-   * @param bytes
-   * @returns {BN} big number representation of number array
-   */
-  private bytesToBN(bytes: Uint8Array): BN {
-
-    let result = new BN('0');
-    for (let i = bytes.length - 1; i >= 0; i--) {
-      const b = new BN(bytes[i]);
-
-      result = result.or(b).shln(i * 8);
+  public encodePoint(point: Uint8Array, encoding: string): string {
+    const offsets = [0x1];
+    if (encoding !== 'ASCII') {
+      offsets.push(0x100);
     }
 
-    return result;
+    const code = [];
+    for (let i = 0; i < point.length; i += offsets.length) {
+      code[i] = 0;
+      for (let j = 0; j < offsets.length; j++) {
+        code[i] += offsets[j] * (i + j < point.length ? point[i + j] : 0);
+      }
+      code[i] = String.fromCharCode(code[i]);
+    }
+
+    return code.join('');
+  }
+
+  /**
+   * Decodes elliptic curve point from a string
+   * @param {string} code - the encoding of a point
+   * @param {string} [encoding=UTF-8] - can be either 'UTF-8', or 'ASCII' (extended ASCII)
+   * @returns {Uint8Array} the point
+   */
+  public decodePoint(code: string, encoding: string): Uint8Array {
+    const masks = [0xFF];
+    const shifts = [0x1];
+    if (encoding !== 'ASCII') {
+      masks.push(0xFF00);
+      shifts.push(0x100);
+    }
+
+    const decode = [];
+    for (let i = 0; i < code.length; i ++) {
+      const character = code.charCodeAt(i);
+      const decodeChar = [];
+      for (let j = 0; j < masks.length; j++) {
+        decodeChar.push((character & masks[j]) / shifts[j]);
+      }
+
+      decode.push.apply(decode, decodeChar);
+    }
+
+    return Uint8Array.from(decode);
   }
 }

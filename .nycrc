@@ -1,0 +1,15 @@
+{
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "include": [
+      "src/**.ts"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "**/*.js",
+      "**/*.spec.ts"
+    ]
+  }
+}

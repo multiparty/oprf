@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_oprf_.html">&quot;oprf&quot;</a>
+					<a href="../modules/_oprf_slim_.html">&quot;oprf.slim&quot;</a>
 				</li>
 				<li>
-					<a href="_oprf_.imaskeddata.html">IMaskedData</a>
+					<a href="_oprf_slim_.imaskeddata.html">IMaskedData</a>
 				</li>
 			</ul>
 			<h1>Interface IMaskedData</h1>
@@ -84,8 +84,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_oprf_.imaskeddata.html#mask" class="tsd-kind-icon">mask</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_oprf_.imaskeddata.html#point" class="tsd-kind-icon">point</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_oprf_slim_.imaskeddata.html#mask" class="tsd-kind-icon">mask</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_oprf_slim_.imaskeddata.html#point" class="tsd-kind-icon">point</a></li>
 							</ul>
 						</section>
 					</div>
@@ -96,20 +96,20 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="mask" class="tsd-anchor"></a>
 					<h3>mask</h3>
-					<div class="tsd-signature tsd-kind-icon">mask<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">BN</span></div>
+					<div class="tsd-signature tsd-kind-icon">mask<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Uint8Array</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/multiparty/oprf/blob/6132543/src/oprf.ts#L9">oprf.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/multiparty/oprf/blob/0b71b09/src/oprf.slim.ts#L3">oprf.slim.ts:3</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="point" class="tsd-anchor"></a>
 					<h3>point</h3>
-					<div class="tsd-signature tsd-kind-icon">point<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
+					<div class="tsd-signature tsd-kind-icon">point<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Uint8Array</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/multiparty/oprf/blob/6132543/src/oprf.ts#L8">oprf.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/multiparty/oprf/blob/0b71b09/src/oprf.slim.ts#L2">oprf.slim.ts:2</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -121,26 +121,29 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_oprf_.html">&quot;oprf&quot;</a>
+					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_oprf_.html">"oprf"</a>
+						<a href="../modules/_oprf_slim_.html">&quot;oprf.slim&quot;</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_oprf_.oprf.html" class="tsd-kind-icon">OPRF</a>
+						<a href="../classes/_oprf_slim_.oprfslim.html" class="tsd-kind-icon">OPRFSlim</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_oprf_.imaskeddata.html" class="tsd-kind-icon">IMasked<wbr>Data</a>
+						<a href="_oprf_slim_.imaskeddata.html" class="tsd-kind-icon">IMasked<wbr>Data</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_oprf_.imaskeddata.html#mask" class="tsd-kind-icon">mask</a>
+								<a href="_oprf_slim_.imaskeddata.html#mask" class="tsd-kind-icon">mask</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_oprf_.imaskeddata.html#point" class="tsd-kind-icon">point</a>
+								<a href="_oprf_slim_.imaskeddata.html#point" class="tsd-kind-icon">point</a>
 							</li>
 						</ul>
 					</li>
@@ -163,6 +166,7 @@
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
@@ -211,7 +215,7 @@
 	</div>
 </footer>
 <div class="container tsd-generator">
-	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>

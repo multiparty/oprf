@@ -1,4 +1,4 @@
-import { OPRF } from '../src/oprf';
+import OPRF = require('../src/oprf');
 import { expect } from 'chai';
 
 const NUM_STRESS_TESTS = 500;

@@ -3,7 +3,8 @@
     <title>OPRF</title>
     <meta charset="UTF-8">
 
-    <script type="text/javascript" src="../dist-web/oprf.js"></script>
+    <script type="text/javascript" src="sodium.js"></script>
+    <script type="text/javascript" src="../../dist/oprf.slim.js"></script>
     <style>
       .ok {
         color: green;
@@ -22,7 +23,7 @@
   <script type="text/javascript">
     var NUM_STRESS_TESTS = 500;
 
-    var oprf = new OPRF();
+    var oprf = new OPRF(sodium);
     oprf.ready.then(function () {
       multiplicationByInverse();
       multiplicationDistributivity();
@@ -35,7 +36,7 @@
       var className = success ? 'ok' : 'error';
       document.getElementById('results').innerHTML += '<div class="' + className + '">' + title + '</div> <br>';
     }
-    
+
     // Random value in range
     function getRandom(max) {
       return Math.floor(Math.random() * Math.floor(max));

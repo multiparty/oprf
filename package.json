@@ -2,16 +2,20 @@
   "name": "oprf",
   "version": "2.0.0",
   "description": "Oblivious pseudo-random function over an elliptic curve (ED25519)",
-  "main": "dist/oprf.js",
-  "types": "dist/oprf.d.ts",
+  "main": "build/oprf.js",
+  "types": "build/oprf.d.ts",
   "directories": {
     "test": "test"
   },
   "files": [
+    "build/**",
+    "package.json",
+    "README.md",
     "dist/**"
   ],
   "scripts": {
     "build": "tsc",
+    "docs": "typedoc --out docs src",
     "build-web": "webpack --mode=production",
     "test": "tslint -c tslint.json --project tsconfig.json && nyc mocha --timeout 200000 -r ts-node/register -r source-map-support/register test/oprf.spec.ts",
     "coveralls": "npm test && nyc report --reporter=text-lcov | ./node_modules/coveralls/bin/coveralls.js"

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "build",
     "module": "commonjs",
     "target": "es5",
     "sourceMap": false,
@@ -16,7 +16,7 @@
   "exclude": [
     "node_modules",
     "dist",
-    "dist-web",
+    "build",
     "test/oprf.spec.ts"
   ]
 }

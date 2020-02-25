@@ -6,14 +6,39 @@
 #### Oblivious pseudo-random function over an elliptic curve (Ristretto255)
 
 ## Installation
-```npm install oprf```
+For node.js, use:
+
+```bash
+npm install oprf
+```
+
+For the browser, include a script tag targeting either `dist/oprf.js` or `dist/oprf.slim.js`.
+
+## Bundle vs slim
+
+For browsers, we provide two built files: `dist/oprf.js` and `dist/oprf.slim.js`.
+
+The first includes both OPRF bundled with [libsodium-wrappers-sumo](https://github.com/jedisct1/libsodium.js) version 0.7.6. The second includes only OPRF.
+
+You can use the slim version for cases where your browser-side code uses a more recent version of libsodium, or if you want
+to load libsodium asynchronously to reduce page load time.
+
+The API for both versions is identical, except that the slim OPRF constructor expects a sodium instance to be passed in
+as a parameter, while the bundled constructor does not expect any parameters.
+
+In node.js, the slim OPRF is not exposed.
+
+```javascript
+const OPRF = require('oprf');
+const oprf = new OPRF(); // will require('libsodium-wrappers-sumo');
+```
 
 ## Initialization 
-OPRF uses [libsodium-wrappers-sumo](https://github.com/jedisct1/libsodium.js) internally. OPRF is not safe to use until sodium is done loading.
+OPRF is not safe to use until sodium is done loading.
 
 ```Typescript
 const oprf = new OPRF();
-await oprf.ready; // wait for dependenices to load
+await oprf.ready; // wait for dependencies to load
 ```
 
 ## Security Guarantees

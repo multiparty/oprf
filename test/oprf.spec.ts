@@ -99,6 +99,18 @@ describe('Elliptic Curve Unit Tests', () => {
 
     expect(decoded).to.deep.equals(point);
   });
+  it('UTF-8 Encode/Decode of Unaligned Buffers', async function () {
+    const oprf = new OPRF();
+    await oprf.ready;
+
+    const randByte = Math.floor(Math.random() * Math.pow(2, 8));
+    const evenBuffer = oprf.generateRandomScalar();
+    const oddBuffer = new Uint8Array(Array.from(evenBuffer).concat([randByte]));
+
+    expect(function () {
+      oprf.encodePoint(oddBuffer, 'UTF-8');
+    }).to.throw();
+  });
 });
 
 describe('End-to-End', () => {

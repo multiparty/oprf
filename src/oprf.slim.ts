@@ -122,11 +122,16 @@ export class OPRFSlim {
       offsets.push(0x100);
     }
 
+    if (point.length % offsets.length !== 0) {
+      // this should never happen currently as libsodium's ristretto implementation uses even size byte arrays
+      throw new Error('point size does not align with encoding unit size, please use ASCII encoding!');
+    }
+
     const code = [];
     for (let i = 0; i < point.length; i += offsets.length) {
       code[i] = 0;
       for (let j = 0; j < offsets.length; j++) {
-        code[i] += offsets[j] * (i + j < point.length ? point[i + j] : 0);
+        code[i] += offsets[j] * point[i + j];
       }
       code[i] = String.fromCharCode(code[i]);
     }

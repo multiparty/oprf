@@ -56,7 +56,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1> oprf</h1>
+			<h1>oprf</h1>
 		</div>
 	</div>
 </header>
@@ -64,60 +64,98 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h1 id="oprf">OPRF</h1>
+				<a href="#oprf" id="oprf" style="color: inherit; text-decoration: none;">
+					<h1>OPRF</h1>
+				</a>
 				<p><a href="https://badge.fury.io/js/oprf"><img src="https://badge.fury.io/js/oprf.svg" alt="npm version"></a>
 					<a href="https://travis-ci.org/multiparty/oprf"><img src="https://travis-ci.org/multiparty/oprf.svg?branch=master" alt="Build Status"></a>
 				<a href="https://coveralls.io/github/multiparty/oprf?branch=master"><img src="https://coveralls.io/repos/github/multiparty/oprf/badge.svg?branch=master" alt="Coverage Status"></a></p>
-				<h4 id="oblivious-pseudo-random-function-over-an-elliptic-curve-ed25519-">Oblivious pseudo-random function over an elliptic curve (ED25519)</h4>
-				<h2 id="installation">Installation</h2>
-				<p><code>npm install oprf</code></p>
-				<h2 id="initialization">Initialization</h2>
-				<p>The sumo version of libsodium must be used</p>
-				<pre><code class="language-Typescript"><span class="hljs-keyword">await</span> _sodium.ready;
-<span class="hljs-keyword">const</span> oprf = <span class="hljs-keyword">new</span> OPRF(_sodium);</code></pre>
-				<h2 id="security-guarantees">Security Guarantees</h2>
-				<p>A client has input <em>x_ while a server holds key _k</em>. The client receives the output of <em>f<sub>k</sub>(x)</em> for some pseudorandom function family <em>f<sub>k</sub></em>. The server learns nothing.</p>
-				<h2 id="dependencies">Dependencies</h2>
-				<ul>
-					<li><a href="https://github.com/indutny/elliptic">elliptic</a></li>
-					<li><a href="https://github.com/jedisct1/libsodium.js">libsodium.js</a></li>
-				</ul>
-				<h2 id="public-interface">Public Interface</h2>
+				<a href="#oblivious-pseudo-random-function-over-an-elliptic-curve-ristretto255" id="oblivious-pseudo-random-function-over-an-elliptic-curve-ristretto255" style="color: inherit; text-decoration: none;">
+					<h4>Oblivious pseudo-random function over an elliptic curve (Ristretto255)</h4>
+				</a>
+				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+					<h2>Installation</h2>
+				</a>
+				<p>For node.js, use:</p>
+				<pre><code class="language-bash">npm install oprf</code></pre>
+				<p>For the browser, include a script tag targeting either <code>dist/oprf.js</code> or <code>dist/oprf.slim.js</code>.</p>
+				<a href="#bundle-vs-slim" id="bundle-vs-slim" style="color: inherit; text-decoration: none;">
+					<h2>Bundle vs slim</h2>
+				</a>
+				<p>For browsers, we provide two built files: <code>dist/oprf.js</code> and <code>dist/oprf.slim.js</code>.</p>
+				<p>The first includes both OPRF bundled with <a href="https://github.com/jedisct1/libsodium.js">libsodium-wrappers-sumo</a> version 0.7.6. The second includes only OPRF.</p>
+				<p>You can use the slim version for cases where your browser-side code uses a more recent version of libsodium, or if you want
+				to load libsodium asynchronously to reduce page load time.</p>
+				<p>The API for both versions is identical, except that the slim OPRF constructor expects a sodium instance to be passed in
+				as a parameter, while the bundled constructor does not expect any parameters.</p>
+				<p>In node.js, the slim OPRF is not exposed.</p>
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> OPRF = <span class="hljs-built_in">require</span>(<span class="hljs-string">'oprf'</span>);
+<span class="hljs-keyword">const</span> oprf = <span class="hljs-keyword">new</span> OPRF(); <span class="hljs-comment">// will require('libsodium-wrappers-sumo');</span></code></pre>
+				<a href="#initialization" id="initialization" style="color: inherit; text-decoration: none;">
+					<h2>Initialization</h2>
+				</a>
+				<p>OPRF is not safe to use until sodium is done loading.</p>
+				<pre><code class="language-Typescript"><span class="hljs-keyword">const</span> oprf = <span class="hljs-keyword">new</span> OPRF();
+<span class="hljs-keyword">await</span> oprf.ready; <span class="hljs-comment">// wait for dependencies to load</span></code></pre>
+				<a href="#security-guarantees" id="security-guarantees" style="color: inherit; text-decoration: none;">
+					<h2>Security Guarantees</h2>
+				</a>
+				<p>A client has input <em>x</em> while a server holds key <em>k</em>. The client receives the output of <em>f<sub>k</sub>(x)</em> for some pseudorandom function family <em>f<sub>k</sub></em>. The server learns nothing.</p>
+				<p>The implementation uses <a href="https://libsodium.gitbook.io/doc/advanced/point-arithmetic/ristretto">Ristretto255</a>, and does not suffer from small cofactor attacks.</p>
+				<a href="#public-interface" id="public-interface" style="color: inherit; text-decoration: none;">
+					<h2>Public Interface</h2>
+				</a>
 				<p>Contains a masked point and the mask that was applied to it</p>
 				<pre><code class="language-Typescript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> IMaskedData {
-  readonly point: <span class="hljs-built_in">number</span>[];
-  readonly mask: BN; <span class="hljs-comment">// big number</span>
+  readonly point: <span class="hljs-built_in">Uint8Array</span>;
+  readonly mask: <span class="hljs-built_in">Uint8Array</span>;
 }</code></pre>
-				<h2 id="public-functions">Public Functions</h2>
+				<a href="#public-functions" id="public-functions" style="color: inherit; text-decoration: none;">
+					<h2>Public Functions</h2>
+				</a>
 				<p><strong>hashToPoint</strong>: maps string input to a point on the elliptic curve</p>
-				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> hashToPoint(input: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">number</span>[]</code></pre>
+				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> hashToPoint(input: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">Uint8Array</span></code></pre>
+				<p><strong>isValidPoint</strong>: returns whether the given point exists on the elliptic curve</p>
+				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> isValidPoint(point: <span class="hljs-built_in">Uint8Array</span>): <span class="hljs-built_in">boolean</span></code></pre>
 				<p><strong>maskInput</strong>: hashes string input as a point on an elliptic curve and applies a random mask to it</p>
 				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> maskInput(input: <span class="hljs-built_in">string</span>): IMaskedData</code></pre>
-				<p><strong>generateRandomScalar</strong>: generates a random 32-byte array of numbers</p>
-				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> generateRandomScalar(): BN</code></pre>
-				<p><strong>isValidPoint</strong>: returns whether the given point exists on the elliptic curve</p>
-				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> isValidPoint(point: <span class="hljs-built_in">number</span>[]): <span class="hljs-built_in">number</span></code></pre>
-				<p><strong>encodePoint</strong>: converts an elliptic.js point representation to number array representation</p>
-				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> encodePoint(point: <span class="hljs-built_in">any</span>): <span class="hljs-built_in">number</span>[]</code></pre>
-				<p><strong>decodePoint</strong>: converts a number array to elliptic.js point object representation</p>
-				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> decodePoint(point: <span class="hljs-built_in">number</span>[]): <span class="hljs-built_in">any</span> </code></pre>
+				<p><strong>maskPoint</strong>: applies a random mask to an elliptic curve point</p>
+				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> maskPoint(point: <span class="hljs-built_in">Uint8Array</span>): IMaskedData</code></pre>
 				<p><strong>unmaskInput</strong>: applies the multiplicative inverse of the mask to the masked point</p>
-				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> unmaskInput(maskedPoint: <span class="hljs-built_in">number</span>[], mask: BN): <span class="hljs-built_in">number</span>[]</code></pre>
-				<h2 id="oprf-steps">OPRF Steps</h2>
+				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> unmaskPoint(maskedPoint: <span class="hljs-built_in">Uint8Array</span>, mask: <span class="hljs-built_in">Uint8Array</span>): <span class="hljs-built_in">Uint8Array</span></code></pre>
+				<p><strong>generateRandomScalar</strong>: generates a uniform random 32-byte number in [1, order of curve)</p>
+				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> generateRandomScalar(): <span class="hljs-built_in">Uint8Array</span></code></pre>
+				<p><strong>scalarMult</strong>: salts a point using a key as a scalar</p>
+				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> scalarMult(point: <span class="hljs-built_in">Uint8Array</span>, key: <span class="hljs-built_in">Uint8Array</span>): <span class="hljs-built_in">Uint8Array</span></code></pre>
+				<p><strong>encodePoint</strong>: encodes a point representation to a string with either &#39;ASCII&#39; or &#39;UTF-8&#39; encoding</p>
+				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> encodePoint(point: <span class="hljs-built_in">Uint8Array</span>, encoding: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">string</span></code></pre>
+				<p><strong>decodePoint</strong>: Decode elliptic curve point from a string</p>
+				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> decodePoint(code: <span class="hljs-built_in">string</span>, encoding: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">Uint8Array</span></code></pre>
+				<a href="#oprf-steps" id="oprf-steps" style="color: inherit; text-decoration: none;">
+					<h2>OPRF Steps</h2>
+				</a>
 				<p>1.) <strong>Client</strong>: hash input and mask it using a randomly generated 32-byte number</p>
 				<pre><code class="language-Typescript"><span class="hljs-keyword">const</span> input = <span class="hljs-string">'hello world'</span>;
 <span class="hljs-keyword">const</span> masked = oprf.maskInput(input);
 
-<span class="hljs-comment">// Send masked.point to server. Do not send masked.mask to the server since it can easily unmask your original input.</span></code></pre>
+<span class="hljs-comment">// Send masked.point to server,</span>
+<span class="hljs-comment">// Do not send masked.mask to the server.</span>
+send(oprf.encodePoint(masked.point, <span class="hljs-string">'UTF-8'</span>));</code></pre>
 				<p>2.) <strong>Server</strong>: salt the masked point using a secret key</p>
-				<pre><code class="language-Typescript"><span class="hljs-comment">// Note: your actual secret key should be a static 32-byte Uint8Array. Do not generate a new scalar for each OPRF unless you have a specific use case for doing so.</span>
-<span class="hljs-keyword">const</span> secretKey = oprf.generateRandomScalar(); 
+				<pre><code class="language-Typescript"><span class="hljs-comment">// Note: your actual secret key should be fixed.</span>
+<span class="hljs-comment">// Do not generate a new scalar for each OPRF</span>
+<span class="hljs-comment">// application unless you have a specific use case for doing so.</span>
+<span class="hljs-keyword">const</span> secretKey = oprf.generateRandomScalar();
+
+<span class="hljs-keyword">const</span> maskedPoint = oprf.decodePoint(receive(), <span class="hljs-string">'UTF-8'</span>);
 <span class="hljs-keyword">const</span> salted = oprf.scalarMult(maskedPoint, secretKey);
 
-<span class="hljs-comment">// Send salted back to the client</span></code></pre>
+<span class="hljs-comment">// Send salted back to the client</span>
+send(oprf.encodePoint(salted, <span class="hljs-string">'UTF-8'</span>));</code></pre>
 				<p>3.) <strong>Client</strong>: unmask the salted point from the server to get a high-entropy output</p>
 				<pre><code class="language-Typescript"><span class="hljs-comment">// Make sure that masked.mask corresponds to the original mask used. </span>
-<span class="hljs-comment">// Otherwise, this will not give you the correct output. </span>
+<span class="hljs-comment">// Otherwise, this will not give you the correct output.</span>
+<span class="hljs-keyword">const</span> salted = oprf.decodePoint(receive(), <span class="hljs-string">'UTF-8'</span>); 
 <span class="hljs-keyword">const</span> unmasked = oprf.unmaskInput(salted, masked.mask);</code></pre>
 				<hr>
 				<p>Implementation inspired by Burns et. al.
@@ -130,17 +168,11 @@
 					<li class="globals  ">
 						<a href="globals.html"><em>Globals</em></a>
 					</li>
-					<li class="label tsd-is-external">
-						<span>Internals</span>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_oprf_.html">&quot;oprf&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_oprf_.html">"oprf"</a>
-					</li>
-					<li class="label tsd-is-external">
-						<span>Externals</span>
-					</li>
-					<li class=" tsd-kind-external-module tsd-is-external">
-						<a href="modules/_tools_.html">"tools"</a>
+						<a href="modules/_oprf_slim_.html">&quot;oprf.slim&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -163,6 +195,7 @@
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
@@ -211,7 +244,7 @@
 	</div>
 </footer>
 <div class="container tsd-generator">
-	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>

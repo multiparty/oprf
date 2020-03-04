@@ -1,67 +1,71 @@
 {
   "name": "oprf",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Oblivious pseudo-random function over an elliptic curve (ED25519)",
-  "main": "dist/oprf.js",
-  "types": "dist/oprf.d.ts",
+  "main": "build/oprf.js",
+  "types": "build/oprf.d.ts",
   "directories": {
     "test": "test"
   },
   "files": [
-    "/dist"
+    "build/**",
+    "package.json",
+    "README.md",
+    "dist/**"
   ],
   "scripts": {
     "build": "tsc",
+    "docs": "typedoc --out docs src",
     "build-web": "webpack --mode=production",
     "test": "tslint -c tslint.json --project tsconfig.json && nyc mocha --timeout 200000 -r ts-node/register -r source-map-support/register test/oprf.spec.ts",
     "coveralls": "npm test && nyc report --reporter=text-lcov | ./node_modules/coveralls/bin/coveralls.js"
-  },
-  "nyc": {
-    "extension": [
-      ".ts"
-    ],
-    "exclude": [
-      "**/*.d.ts",
-      "**/*.js",
-      "**/*.spec.ts",
-      "src/tools.ts"
-    ]
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/multiparty/oprf.git"
   },
   "author": "Boston University - Software & Application Innovation Lab",
+  "contributors": [
+    {
+      "name": "Frederick Jansen",
+      "email": "fjansen@bu.edu",
+      "url": "https://prettyplease.me/"
+    },
+    {
+      "name": "Lucy Qin",
+      "email": "lucyq@brown.edu",
+      "url": "http://lucyq.in/"
+    },
+    {
+      "name": "Kinan Dak Albab",
+      "email": "babman@bu.edu",
+      "url": "http://cs-people.bu.edu/babman/"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/multiparty/oprf/issues"
   },
   "homepage": "https://github.com/multiparty/oprf#readme",
   "dependencies": {
-    "bn.js": "5.0.0",
-    "elliptic": "6.5.1"
+    "libsodium-wrappers-sumo": "^0.7.6"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^10.14.13",
+    "@types/mocha": "^7.0.1",
+    "@types/node": "^13.7.1",
     "chai": "^4.2.0",
     "coveralls": "^3.0.4",
-    "libsodium-wrappers-sumo": "0.7.3",
-    "mocha": "^5.2.0",
-    "nyc": "^14.1.1",
-    "sinon": "^7.3.2",
+    "mocha": "^7.0.1",
+    "nyc": "^15.0.0",
     "source-map-support": "^0.5.6",
-    "ts-loader": "^4.5.0",
-    "ts-node": "^7.0.0",
-    "tslint": "^5.18.0",
-    "typedoc": "^0.15.0",
+    "ts-loader": "^6.2.1",
+    "ts-node": "^8.6.2",
+    "tslint": "^6.0.0",
+    "typedoc": "^0.16.9",
     "types-bn": "0.0.1",
-    "typescript": "^2.9.2",
+    "typescript": "^3.7.5",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.9"
-  },
-  "peerDependencies": {
-    "libsodium-wrappers-sumo": "0.7.3"
   }
 }

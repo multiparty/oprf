@@ -2,10 +2,10 @@ node_modules/
 .npm
 *.log
 logs
-dist/
 lib/
 coverage/
 .nyc_output/
 .DS_Store
 .idea/
 *.iml
+build/

@@ -67,7 +67,7 @@ export class OPRFSlim {
 
   /**
    * Masks a point with a random mask and returns both masked point and mask
-   * @param {Uint8Array} input
+   * @param {Uint8Array} point
    * @returns {IMaskedData} a masked point and the mask
    */
   public maskPoint(point: Uint8Array): IMaskedData {
@@ -117,21 +117,20 @@ export class OPRFSlim {
    * @returns {string} a compact string representing the point
    */
   public encodePoint(point: Uint8Array, encoding: string): string {
-    const offsets = [0x1];
-    if (encoding !== 'ASCII') {
-      offsets.push(0x100);
-    }
+    const offset = encoding === 'ASCII' ? 1 : 2;
 
-    if (point.length % offsets.length !== 0) {
+    if (point.length % offset !== 0) {
       // this should never happen currently as libsodium's ristretto implementation uses even size byte arrays
       throw new Error('point size does not align with encoding unit size, please use ASCII encoding!');
     }
 
     const code = [];
-    for (let i = 0; i < point.length; i += offsets.length) {
-      code[i] = 0;
-      for (let j = 0; j < offsets.length; j++) {
-        code[i] += offsets[j] * point[i + j];
+    for (let i = 0; i < point.length; i += offset) {
+      if (encoding === 'ASCII') {
+        code[i] = point[i];
+      } else {
+        // UTF-8 (or rather USC-2) has 2 bytes per character, so combine 2 Uint8 values into one, shifting one a byte
+        code[i] = point[i] | (point[i + 1] << 8);
       }
       code[i] = String.fromCharCode(code[i]);
     }
@@ -146,19 +145,16 @@ export class OPRFSlim {
    * @returns {Uint8Array} the point
    */
   public decodePoint(code: string, encoding: string): Uint8Array {
-    const masks = [0xFF];
-    const shifts = [0x1];
-    if (encoding !== 'ASCII') {
-      masks.push(0xFF00);
-      shifts.push(0x100);
-    }
-
     const decode = [];
     for (let i = 0; i < code.length; i ++) {
       const character = code.charCodeAt(i);
       const decodeChar = [];
-      for (let j = 0; j < masks.length; j++) {
-        decodeChar.push((character & masks[j]) / shifts[j]);
+
+      // Mask is not required for ASCII, but UTF-8 has second point encoded at 0xFF00
+      decodeChar.push(character & 0xFF);
+      if (encoding !== 'ASCII') {
+        // 2-byte characters, get second point
+        decodeChar.push(character >> 8);
       }
 
       decode.push.apply(decode, decodeChar);

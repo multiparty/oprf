@@ -111,6 +111,42 @@ describe('Elliptic Curve Unit Tests', () => {
       oprf.encodePoint(oddBuffer, 'UTF-8');
     }).to.throw();
   });
+it('UTF-8 Encoding/Decoding', async function () {
+    const oprf = new OPRF();
+    await oprf.ready;
+
+    const point = oprf.hashToPoint(createRandString());
+    const encoded = oprf.encodePoint(point, 'UTF-8');
+    const decoded = oprf.decodePoint(encoded, 'UTF-8');
+
+    expect(decoded).to.deep.equals(point);
+  });
+
+  it('Point Addition', async function () {
+    const oprf = new OPRF();
+    await oprf.ready;
+
+    const r = oprf.generateRandomScalar();
+    const k = oprf.generateRandomScalar();
+    const correct = oprf.sodium.crypto_core_ristretto255_add(r, k);
+
+    const result = oprf.addTwoPoints(r, k);
+
+    expect(result).to.deep.equals(correct);
+  });
+
+  it('Point Subtraction', async function () {
+    const oprf = new OPRF();
+    await oprf.ready;
+
+    const r = oprf.generateRandomScalar();
+    const k = oprf.generateRandomScalar();
+    const correct = oprf.sodium.crypto_core_ristretto255_sub(r, k);
+
+    const result = oprf.subtractTwoPoints(r, k);
+
+    expect(result).to.deep.equals(correct);
+  });
 });
 
 describe('End-to-End', () => {

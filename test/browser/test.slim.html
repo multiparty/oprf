@@ -1,134 +1,159 @@
 <html>
-  <head>
-    <title>OPRF</title>
-    <meta charset="UTF-8">
 
-    <script type="text/javascript" src="sodium.js"></script>
-    <script type="text/javascript" src="../../dist/oprf.slim.js"></script>
-    <style>
-      .ok {
-        color: green;
+<head>
+  <title>OPRF</title>
+  <meta charset="UTF-8">
+
+  <script type="text/javascript" src="sodium.js"></script>
+  <script type="text/javascript" src="../../dist/oprf.slim.js"></script>
+  <style>
+    .ok {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+<h1>OPRF Tests</h1>
+<div id="results"></div>
+</body>
+
+<script type="text/javascript">
+  var NUM_STRESS_TESTS = 500;
+
+  var oprf = new OPRF(sodium);
+  oprf.ready.then(function () {
+    multiplicationByInverse();
+    multiplicationDistributivity();
+    ASCII();
+    UTF8();
+    Add();
+    Subtract();
+    setTimeout(endToEnd, 0);
+  });
+
+  function display(title, success) {
+    var className = success ? 'ok' : 'error';
+    document.getElementById('results').innerHTML += '<div class="' + className + '">' + title + '</div> <br>';
+  }
+
+  // Random value in range
+  function getRandom(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+  }
+
+  // Create a random string to use as input
+  function createRandString() {
+    var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+    var str = '';
+    for (var i = 0; i < getRandom(128); i++) {
+      var index = getRandom(alphabet.length);
+      str += alphabet[index];
+    }
+
+    if (str === '') {
+      str = 'XXXXXX';
+    }
+    return str;
+  }
+
+  // The elliptic curve point at point * (order + 1) should loop back to the original point
+  function multiplicationByInverse() {
+    var r = oprf.generateRandomScalar();
+    var rInv = oprf.sodium.crypto_core_ristretto255_scalar_invert(r);
+
+    var point = oprf.hashToPoint('hello world');
+    var multiplied = oprf.scalarMult(oprf.scalarMult(point, r), rInv);
+
+    display('Multipliation By Inverse', point.toString() === multiplied.toString());
+  }
+
+  // P * r + P * k = P * (r + k) (mod order)
+  function multiplicationDistributivity() {
+    var r = oprf.generateRandomScalar();
+    var k = oprf.generateRandomScalar();
+    var rPlusK = oprf.sodium.crypto_core_ristretto255_scalar_add(r, k);
+
+    var point = oprf.hashToPoint('mary had a little lamb');
+    var p1 = oprf.scalarMult(point, r);
+    var p2 = oprf.scalarMult(point, k);
+    var result = oprf.sodium.crypto_core_ristretto255_add(p1, p2);
+    var correct = oprf.scalarMult(point, rPlusK);
+
+    display('Multiplicatin Distributivity', result.toString() === correct.toString());
+  }
+
+  // Encoding/Decoding
+  function ASCII() {
+    var point = oprf.hashToPoint('This is a test');
+    var encoded = oprf.encodePoint(point, 'ASCII');
+    var decoded = oprf.decodePoint(encoded, 'ASCII');
+
+    display('ASCII Encoding/Decoding', decoded.toString() === point.toString());
+  }
+
+  function UTF8() {
+    var point = oprf.hashToPoint('This is a test');
+    var encoded = oprf.encodePoint(point, 'UTF-8');
+    var decoded = oprf.decodePoint(encoded, 'UTF-8');
+
+    display('UTF-8 Encoding/Decoding', decoded.toString() === point.toString());
+  }
+
+  // Addition/Subtraction
+  function Add() {
+    var pointA = oprf.generateRandomScalar();
+    var pointB = oprf.generateRandomScalar();
+    var correct = oprf.sodium.crypto_core_ristretto255_add(pointA, pointB);
+    var result = oprf.addPoints(pointA, pointB);
+
+    display('Point Addition', correct.toString() === result.toString());
+  }
+
+  function Subtract() {
+    var pointA = oprf.generateRandomScalar();
+    var pointB = oprf.generateRandomScalar();
+    var correct = oprf.sodium.crypto_core_ristretto255_sub(pointA, pointB);
+    var result = oprf.subtractPoints(pointA, pointB);
+
+    display('Point Subtraction', correct.toString() === result.toString());
+  }
+
+  // End-2-End protocol
+  function endToEnd() {
+    console.time('Stress Test');
+
+    for (var i = 0; i < NUM_STRESS_TESTS; i++) {
+      var input = createRandString();
+
+      var maskedPoint = oprf.maskInput(input);
+      var encodedP1 = oprf.encodePoint(maskedPoint.point, 'UTF-8');
+
+      var decodedP1 = oprf.decodePoint(encodedP1, 'UTF-8');
+      var key = oprf.generateRandomScalar();
+      var saltedPoint = oprf.scalarMult(decodedP1, key);
+      var encodedP2 = oprf.encodePoint(saltedPoint, 'ASCII');
+
+      var decodedP2 = oprf.decodePoint(encodedP2, 'ASCII');
+      var unmaskedPoint = oprf.unmaskPoint(decodedP2, maskedPoint.mask);
+
+      // Specification
+      var point = oprf.hashToPoint(input);
+      var correct = oprf.scalarMult(point, key);
+
+      if (unmaskedPoint.toString() !== correct.toString()) {
+        display('End to end', false);
+        return;
       }
-      .error {
-        color: red;
-      }
-    </style>
-  </head>
-
-  <body>
-    <h1>OPRF Tests</h1>
-    <div id="results"></div>
-  </body>
-
-  <script type="text/javascript">
-    var NUM_STRESS_TESTS = 500;
-
-    var oprf = new OPRF(sodium);
-    oprf.ready.then(function () {
-      multiplicationByInverse();
-      multiplicationDistributivity();
-      ASCII();
-      UTF8();
-      setTimeout(endToEnd, 0);
-    });
-
-    function display(title, success) {
-      var className = success ? 'ok' : 'error';
-      document.getElementById('results').innerHTML += '<div class="' + className + '">' + title + '</div> <br>';
     }
 
-    // Random value in range
-    function getRandom(max) {
-      return Math.floor(Math.random() * Math.floor(max));
-    }
+    console.timeEnd('Stress Test');
+    display('End to end', true);
+  }
+</script>
 
-    // Create a random string to use as input
-    function createRandString() {
-      var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-      var str = '';
-      for (var i = 0; i < getRandom(128); i++) {
-        var index = getRandom(alphabet.length);
-        str += alphabet[index];
-      }
-
-      if (str === '') {
-        str = 'XXXXXX';
-      }
-      return str;
-    }
-
-    // The elliptic curve point at point * (order + 1) should loop back to the original point
-    function multiplicationByInverse() {
-      var r = oprf.generateRandomScalar();
-      var rInv = oprf.sodium.crypto_core_ristretto255_scalar_invert(r);
-
-      var point = oprf.hashToPoint('hello world');
-      var multiplied = oprf.scalarMult(oprf.scalarMult(point, r), rInv);
-
-      display('Multipliation By Inverse', point.toString() === multiplied.toString());
-    }
-
-    // P * r + P * k = P * (r + k) (mod order)
-    function multiplicationDistributivity() {
-      var r = oprf.generateRandomScalar();
-      var k = oprf.generateRandomScalar();
-      var rPlusK = oprf.sodium.crypto_core_ristretto255_scalar_add(r, k);
-
-      var point = oprf.hashToPoint('mary had a little lamb');
-      var p1 = oprf.scalarMult(point, r);
-      var p2 = oprf.scalarMult(point, k);
-      var result = oprf.sodium.crypto_core_ristretto255_add(p1, p2);
-      var correct = oprf.scalarMult(point, rPlusK);
-
-      display('Multiplicatin Distributivity', result.toString() === correct.toString());
-    }
-
-    // Encoding/Decoding
-    function ASCII() {
-      var point = oprf.hashToPoint('This is a test');
-      var encoded = oprf.encodePoint(point, 'ASCII');
-      var decoded = oprf.decodePoint(encoded, 'ASCII');
-
-      display('ASCII Encoding/Decoding', decoded.toString() === point.toString());
-    }
-    function UTF8() {
-      var point = oprf.hashToPoint('This is a test');
-      var encoded = oprf.encodePoint(point, 'UTF-8');
-      var decoded = oprf.decodePoint(encoded, 'UTF-8');
-
-      display('UTF-8 Encoding/Decoding', decoded.toString() === point.toString());
-    }
-
-    // End-2-End protocol
-    function endToEnd() {
-      console.time('Stress Test');
-
-      for (var i = 0; i < NUM_STRESS_TESTS; i++) {
-        var input = createRandString();
-
-        var maskedPoint = oprf.maskInput(input);
-        var encodedP1 = oprf.encodePoint(maskedPoint.point, 'UTF-8');
-
-        var decodedP1 = oprf.decodePoint(encodedP1, 'UTF-8');
-        var key = oprf.generateRandomScalar();
-        var saltedPoint = oprf.scalarMult(decodedP1, key);
-        var encodedP2 = oprf.encodePoint(saltedPoint, 'ASCII');
-
-        var decodedP2 = oprf.decodePoint(encodedP2, 'ASCII');
-        var unmaskedPoint = oprf.unmaskPoint(decodedP2, maskedPoint.mask);
-
-        // Specification
-        var point = oprf.hashToPoint(input);
-        var correct = oprf.scalarMult(point, key);
-
-        if (unmaskedPoint.toString() !== correct.toString()) {
-          display('End to end', false);
-          return;
-        }
-      }
-
-      console.timeEnd('Stress Test');
-      display('End to end', true);
-    }
-  </script>
 </html>

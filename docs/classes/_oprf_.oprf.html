@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>OPRF | oprf</title>
-	<meta name="description" content="">
+	<meta name="description" content="Documentation for oprf">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -13,7 +13,7 @@
 	<div class="tsd-page-toolbar">
 		<div class="container">
 			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
 					<div class="field">
 						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
 						<input id="tsd-search-field" type="text" />
@@ -109,6 +109,7 @@
 						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_oprf_.oprf.html#addpoints" class="tsd-kind-icon">add<wbr>Points</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_oprf_.oprf.html#decodepoint" class="tsd-kind-icon">decode<wbr>Point</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_oprf_.oprf.html#encodepoint" class="tsd-kind-icon">encode<wbr>Point</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_oprf_.oprf.html#generaterandomscalar" class="tsd-kind-icon">generate<wbr>Random<wbr>Scalar</a></li>
@@ -117,6 +118,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_oprf_.oprf.html#maskinput" class="tsd-kind-icon">mask<wbr>Input</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_oprf_.oprf.html#maskpoint" class="tsd-kind-icon">mask<wbr>Point</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_oprf_.oprf.html#scalarmult" class="tsd-kind-icon">scalar<wbr>Mult</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_oprf_.oprf.html#subtractpoints" class="tsd-kind-icon">subtract<wbr>Points</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_oprf_.oprf.html#unmaskpoint" class="tsd-kind-icon">unmask<wbr>Point</a></li>
 							</ul>
 						</section>
@@ -136,7 +138,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_oprf_slim_.oprfslim.html">OPRFSlim</a>.<a href="_oprf_slim_.oprfslim.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/e323246/src/oprf.ts#L14">oprf.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/d1b7da2/src/oprf.ts#L14">oprf.ts:14</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_oprf_.oprf.html" class="tsd-signature-type">OPRF</a></h4>
@@ -153,7 +155,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_oprf_slim_.oprfslim.html">OPRFSlim</a>.<a href="_oprf_slim_.oprfslim.html#ready">ready</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/multiparty/oprf/blob/e323246/src/oprf.slim.ts#L19">oprf.slim.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/multiparty/oprf/blob/d1b7da2/src/oprf.slim.ts#L19">oprf.slim.ts:19</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -175,7 +177,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_oprf_slim_.oprfslim.html">OPRFSlim</a>.<a href="_oprf_slim_.oprfslim.html#sodium">sodium</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/multiparty/oprf/blob/e323246/src/oprf.slim.ts#L25">oprf.slim.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/multiparty/oprf/blob/d1b7da2/src/oprf.slim.ts#L25">oprf.slim.ts:25</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -193,6 +195,39 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="addpoints" class="tsd-anchor"></a>
+					<h3>add<wbr>Points</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Points<span class="tsd-signature-symbol">(</span>pointA<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span>, pointB<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_oprf_slim_.oprfslim.html">OPRFSlim</a>.<a href="_oprf_slim_.oprfslim.html#addpoints">addPoints</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/d1b7da2/src/oprf.slim.ts#L74">oprf.slim.ts:74</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Adds pointA and pointB together on an elliptic curve and returns the sum</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>pointA: <span class="tsd-signature-type">Uint8Array</span></h5>
+								</li>
+								<li>
+									<h5>pointB: <span class="tsd-signature-type">Uint8Array</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Uint8Array</span></h4>
+							<p>sum of pointA and pointB</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="decodepoint" class="tsd-anchor"></a>
 					<h3>decode<wbr>Point</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -203,7 +238,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_oprf_slim_.oprfslim.html">OPRFSlim</a>.<a href="_oprf_slim_.oprfslim.html#decodepoint">decodePoint</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/e323246/src/oprf.slim.ts#L147">oprf.slim.ts:147</a></li>
+									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/d1b7da2/src/oprf.slim.ts#L167">oprf.slim.ts:167</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -239,7 +274,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_oprf_slim_.oprfslim.html">OPRFSlim</a>.<a href="_oprf_slim_.oprfslim.html#encodepoint">encodePoint</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/e323246/src/oprf.slim.ts#L119">oprf.slim.ts:119</a></li>
+									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/d1b7da2/src/oprf.slim.ts#L139">oprf.slim.ts:139</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -275,7 +310,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_oprf_slim_.oprfslim.html">OPRFSlim</a>.<a href="_oprf_slim_.oprfslim.html#generaterandomscalar">generateRandomScalar</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/e323246/src/oprf.slim.ts#L50">oprf.slim.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/d1b7da2/src/oprf.slim.ts#L50">oprf.slim.ts:50</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -298,7 +333,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_oprf_slim_.oprfslim.html">OPRFSlim</a>.<a href="_oprf_slim_.oprfslim.html#hashtopoint">hashToPoint</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/e323246/src/oprf.slim.ts#L41">oprf.slim.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/d1b7da2/src/oprf.slim.ts#L41">oprf.slim.ts:41</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -328,7 +363,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_oprf_slim_.oprfslim.html">OPRFSlim</a>.<a href="_oprf_slim_.oprfslim.html#isvalidpoint">isValidPoint</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/e323246/src/oprf.slim.ts#L109">oprf.slim.ts:109</a></li>
+									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/d1b7da2/src/oprf.slim.ts#L129">oprf.slim.ts:129</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -358,7 +393,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_oprf_slim_.oprfslim.html">OPRFSlim</a>.<a href="_oprf_slim_.oprfslim.html#maskinput">maskInput</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/e323246/src/oprf.slim.ts#L59">oprf.slim.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/d1b7da2/src/oprf.slim.ts#L59">oprf.slim.ts:59</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -388,7 +423,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_oprf_slim_.oprfslim.html">OPRFSlim</a>.<a href="_oprf_slim_.oprfslim.html#maskpoint">maskPoint</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/e323246/src/oprf.slim.ts#L73">oprf.slim.ts:73</a></li>
+									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/d1b7da2/src/oprf.slim.ts#L93">oprf.slim.ts:93</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -418,7 +453,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_oprf_slim_.oprfslim.html">OPRFSlim</a>.<a href="_oprf_slim_.oprfslim.html#scalarmult">scalarMult</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/e323246/src/oprf.slim.ts#L96">oprf.slim.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/d1b7da2/src/oprf.slim.ts#L116">oprf.slim.ts:116</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -447,6 +482,39 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="subtractpoints" class="tsd-anchor"></a>
+					<h3>subtract<wbr>Points</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">subtract<wbr>Points<span class="tsd-signature-symbol">(</span>pointA<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span>, pointB<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_oprf_slim_.oprfslim.html">OPRFSlim</a>.<a href="_oprf_slim_.oprfslim.html#subtractpoints">subtractPoints</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/d1b7da2/src/oprf.slim.ts#L84">oprf.slim.ts:84</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Subtracts pointB from pointA and returns the difference</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>pointA: <span class="tsd-signature-type">Uint8Array</span></h5>
+								</li>
+								<li>
+									<h5>pointB: <span class="tsd-signature-type">Uint8Array</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Uint8Array</span></h4>
+							<p>difference between pointA and pointB</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="unmaskpoint" class="tsd-anchor"></a>
 					<h3>unmask<wbr>Point</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -457,7 +525,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_oprf_slim_.oprfslim.html">OPRFSlim</a>.<a href="_oprf_slim_.oprfslim.html#unmaskpoint">unmaskPoint</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/e323246/src/oprf.slim.ts#L85">oprf.slim.ts:85</a></li>
+									<li>Defined in <a href="https://github.com/multiparty/oprf/blob/d1b7da2/src/oprf.slim.ts#L105">oprf.slim.ts:105</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -493,10 +561,10 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/_oprf_.html">&quot;oprf&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/_oprf_slim_.html">&quot;oprf.slim&quot;</a>
 					</li>
 				</ul>
@@ -505,7 +573,7 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+					<li class="current tsd-kind-class tsd-parent-kind-module">
 						<a href="_oprf_.oprf.html" class="tsd-kind-icon">OPRF</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
@@ -516,6 +584,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 								<a href="_oprf_.oprf.html#sodium" class="tsd-kind-icon">sodium</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_oprf_.oprf.html#addpoints" class="tsd-kind-icon">add<wbr>Points</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="_oprf_.oprf.html#decodepoint" class="tsd-kind-icon">decode<wbr>Point</a>
@@ -542,6 +613,9 @@
 								<a href="_oprf_.oprf.html#scalarmult" class="tsd-kind-icon">scalar<wbr>Mult</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_oprf_.oprf.html#subtractpoints" class="tsd-kind-icon">subtract<wbr>Points</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="_oprf_.oprf.html#unmaskpoint" class="tsd-kind-icon">unmask<wbr>Point</a>
 							</li>
 						</ul>
@@ -558,57 +632,15 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
-				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
-				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
-				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
-				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
-				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
-				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
 			</ul>
 		</div>
 	</div>
@@ -618,6 +650,5 @@
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>

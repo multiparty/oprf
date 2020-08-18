@@ -1,5 +1,5 @@
 # OPRF
-[![npm version](https://badge.fury.io/js/oprf.svg)](https://badge.fury.io/js/oprf) 
+[![npm version](https://badge.fury.io/js/oprf.svg)](https://badge.fury.io/js/oprf)
 [![Build Status](https://travis-ci.org/multiparty/oprf.svg?branch=master)](https://travis-ci.org/multiparty/oprf)
 [![Coverage Status](https://coveralls.io/repos/github/multiparty/oprf/badge.svg?branch=master)](https://coveralls.io/github/multiparty/oprf?branch=master)
 
@@ -33,7 +33,7 @@ const OPRF = require('oprf');
 const oprf = new OPRF(); // will require('libsodium-wrappers-sumo');
 ```
 
-## Initialization 
+## Initialization
 OPRF is not safe to use until sodium is done loading.
 
 ```Typescript
@@ -97,9 +97,19 @@ public scalarMult(point: Uint8Array, key: Uint8Array): Uint8Array
 public encodePoint(point: Uint8Array, encoding: string): string
 ```
 
-**decodePoint**: Decode elliptic curve point from a string
+**decodePoint**: decode elliptic curve point from a string
 ```Typescript
 public decodePoint(code: string, encoding: string): Uint8Array
+```
+
+**addPoints**: add two points on an elliptic curve
+```Typescript
+public addPoints(pointA: Uint8Array, pointB: Uint8Array): Uint8Array
+```
+
+**subtractPoints**: subtract two points on an elliptic curve
+```Typescript
+public subtractPoints(pointA: Uint8Array, pointB: Uint8Array): Uint8Array
 ```
 
 ## OPRF Steps
@@ -129,9 +139,9 @@ send(oprf.encodePoint(salted, 'UTF-8'));
 
 3.) **Client**: unmask the salted point from the server to get a high-entropy output
 ```Typescript
-// Make sure that masked.mask corresponds to the original mask used. 
+// Make sure that masked.mask corresponds to the original mask used.
 // Otherwise, this will not give you the correct output.
-const salted = oprf.decodePoint(receive(), 'UTF-8'); 
+const salted = oprf.decodePoint(receive(), 'UTF-8');
 const unmasked = oprf.unmaskInput(salted, masked.mask);
 ```
 

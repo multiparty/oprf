@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>oprf</title>
-	<meta name="description" content="">
+	<meta name="description" content="Documentation for oprf">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
 </head>
@@ -13,7 +13,7 @@
 	<div class="tsd-page-toolbar">
 		<div class="container">
 			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
 					<div class="field">
 						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
 						<input id="tsd-search-field" type="text" />
@@ -89,8 +89,8 @@
 				<p>The API for both versions is identical, except that the slim OPRF constructor expects a sodium instance to be passed in
 				as a parameter, while the bundled constructor does not expect any parameters.</p>
 				<p>In node.js, the slim OPRF is not exposed.</p>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> OPRF = <span class="hljs-built_in">require</span>(<span class="hljs-string">'oprf'</span>);
-<span class="hljs-keyword">const</span> oprf = <span class="hljs-keyword">new</span> OPRF(); <span class="hljs-comment">// will require('libsodium-wrappers-sumo');</span></code></pre>
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> OPRF = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;oprf&#x27;</span>);
+<span class="hljs-keyword">const</span> oprf = <span class="hljs-keyword">new</span> OPRF(); <span class="hljs-comment">// will require(&#x27;libsodium-wrappers-sumo&#x27;);</span></code></pre>
 				<a href="#initialization" id="initialization" style="color: inherit; text-decoration: none;">
 					<h2>Initialization</h2>
 				</a>
@@ -107,8 +107,8 @@
 				</a>
 				<p>Contains a masked point and the mask that was applied to it</p>
 				<pre><code class="language-Typescript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> IMaskedData {
-  readonly point: <span class="hljs-built_in">Uint8Array</span>;
-  readonly mask: <span class="hljs-built_in">Uint8Array</span>;
+  <span class="hljs-keyword">readonly</span> point: <span class="hljs-built_in">Uint8Array</span>;
+  <span class="hljs-keyword">readonly</span> mask: <span class="hljs-built_in">Uint8Array</span>;
 }</code></pre>
 				<a href="#public-functions" id="public-functions" style="color: inherit; text-decoration: none;">
 					<h2>Public Functions</h2>
@@ -129,33 +129,37 @@
 				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> scalarMult(point: <span class="hljs-built_in">Uint8Array</span>, key: <span class="hljs-built_in">Uint8Array</span>): <span class="hljs-built_in">Uint8Array</span></code></pre>
 				<p><strong>encodePoint</strong>: encodes a point representation to a string with either &#39;ASCII&#39; or &#39;UTF-8&#39; encoding</p>
 				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> encodePoint(point: <span class="hljs-built_in">Uint8Array</span>, encoding: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">string</span></code></pre>
-				<p><strong>decodePoint</strong>: Decode elliptic curve point from a string</p>
+				<p><strong>decodePoint</strong>: decode elliptic curve point from a string</p>
 				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> decodePoint(code: <span class="hljs-built_in">string</span>, encoding: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">Uint8Array</span></code></pre>
+				<p><strong>addPoints</strong>: add two points on an elliptic curve</p>
+				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> addPoints(pointA: <span class="hljs-built_in">Uint8Array</span>, pointB: <span class="hljs-built_in">Uint8Array</span>): <span class="hljs-built_in">Uint8Array</span></code></pre>
+				<p><strong>subtractPoints</strong>: subtract two points on an elliptic curve</p>
+				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> subtractPoints(pointA: <span class="hljs-built_in">Uint8Array</span>, pointB: <span class="hljs-built_in">Uint8Array</span>): <span class="hljs-built_in">Uint8Array</span></code></pre>
 				<a href="#oprf-steps" id="oprf-steps" style="color: inherit; text-decoration: none;">
 					<h2>OPRF Steps</h2>
 				</a>
 				<p>1.) <strong>Client</strong>: hash input and mask it using a randomly generated 32-byte number</p>
-				<pre><code class="language-Typescript"><span class="hljs-keyword">const</span> input = <span class="hljs-string">'hello world'</span>;
+				<pre><code class="language-Typescript"><span class="hljs-keyword">const</span> input = <span class="hljs-string">&#x27;hello world&#x27;</span>;
 <span class="hljs-keyword">const</span> masked = oprf.maskInput(input);
 
 <span class="hljs-comment">// Send masked.point to server,</span>
 <span class="hljs-comment">// Do not send masked.mask to the server.</span>
-send(oprf.encodePoint(masked.point, <span class="hljs-string">'UTF-8'</span>));</code></pre>
+send(oprf.encodePoint(masked.point, <span class="hljs-string">&#x27;UTF-8&#x27;</span>));</code></pre>
 				<p>2.) <strong>Server</strong>: salt the masked point using a secret key</p>
 				<pre><code class="language-Typescript"><span class="hljs-comment">// Note: your actual secret key should be fixed.</span>
 <span class="hljs-comment">// Do not generate a new scalar for each OPRF</span>
 <span class="hljs-comment">// application unless you have a specific use case for doing so.</span>
 <span class="hljs-keyword">const</span> secretKey = oprf.generateRandomScalar();
 
-<span class="hljs-keyword">const</span> maskedPoint = oprf.decodePoint(receive(), <span class="hljs-string">'UTF-8'</span>);
+<span class="hljs-keyword">const</span> maskedPoint = oprf.decodePoint(receive(), <span class="hljs-string">&#x27;UTF-8&#x27;</span>);
 <span class="hljs-keyword">const</span> salted = oprf.scalarMult(maskedPoint, secretKey);
 
 <span class="hljs-comment">// Send salted back to the client</span>
-send(oprf.encodePoint(salted, <span class="hljs-string">'UTF-8'</span>));</code></pre>
+send(oprf.encodePoint(salted, <span class="hljs-string">&#x27;UTF-8&#x27;</span>));</code></pre>
 				<p>3.) <strong>Client</strong>: unmask the salted point from the server to get a high-entropy output</p>
-				<pre><code class="language-Typescript"><span class="hljs-comment">// Make sure that masked.mask corresponds to the original mask used. </span>
+				<pre><code class="language-Typescript"><span class="hljs-comment">// Make sure that masked.mask corresponds to the original mask used.</span>
 <span class="hljs-comment">// Otherwise, this will not give you the correct output.</span>
-<span class="hljs-keyword">const</span> salted = oprf.decodePoint(receive(), <span class="hljs-string">'UTF-8'</span>); 
+<span class="hljs-keyword">const</span> salted = oprf.decodePoint(receive(), <span class="hljs-string">&#x27;UTF-8&#x27;</span>);
 <span class="hljs-keyword">const</span> unmasked = oprf.unmaskInput(salted, masked.mask);</code></pre>
 				<hr>
 				<p>Implementation inspired by Burns et. al.
@@ -168,10 +172,10 @@ send(oprf.encodePoint(salted, <span class="hljs-string">'UTF-8'</span>));</code>
 					<li class="globals  ">
 						<a href="globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class=" tsd-kind-module">
 						<a href="modules/_oprf_.html">&quot;oprf&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class=" tsd-kind-module">
 						<a href="modules/_oprf_slim_.html">&quot;oprf.slim&quot;</a>
 					</li>
 				</ul>
@@ -188,57 +192,10 @@ send(oprf.encodePoint(salted, <span class="hljs-string">'UTF-8'</span>));</code>
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
-				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
-				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
-				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
-				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
-				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
-			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
-				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
 			</ul>
 		</div>
 	</div>
@@ -248,6 +205,5 @@ send(oprf.encodePoint(salted, <span class="hljs-string">'UTF-8'</span>));</code>
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>

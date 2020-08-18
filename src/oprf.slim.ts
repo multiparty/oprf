@@ -69,9 +69,9 @@ export class OPRFSlim {
    * Adds pointA and pointB together on an elliptic curve and returns the sum
    * @param {Uint8Array} pointA
    * @param {Uint8Array} pointB
-   * @returns {IMaskedData} sum of pointA and pointB
+   * @returns {Uint8Array} sum of pointA and pointB
    */
-  public addTwoPoints(pointA: Uint8Array, pointB: Uint8Array): Uint8Array {
+  public addPoints(pointA: Uint8Array, pointB: Uint8Array): Uint8Array {
     return this.sodium.crypto_core_ristretto255_add(pointA, pointB);
   }
 
@@ -79,9 +79,9 @@ export class OPRFSlim {
    * Subtracts pointB from pointA and returns the difference
    * @param {Uint8Array} pointA
    * @param {Uint8Array} pointB
-   * @returns {IMaskedData} difference between pointA and pointB
+   * @returns {Uint8Array} difference between pointA and pointB
    */
-  public subtractTwoPoints(pointA: Uint8Array, pointB: Uint8Array): Uint8Array {
+  public subtractPoints(pointA: Uint8Array, pointB: Uint8Array): Uint8Array {
     return this.sodium.crypto_core_ristretto255_sub(pointA, pointB);
   }
 
@@ -166,7 +166,7 @@ export class OPRFSlim {
    */
   public decodePoint(code: string, encoding: string): Uint8Array {
     const decode = [];
-    for (let i = 0; i < code.length; i ++) {
+    for (let i = 0; i < code.length; i++) {
       const character = code.charCodeAt(i);
       const decodeChar = [];
 

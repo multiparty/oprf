@@ -129,8 +129,12 @@
 				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> scalarMult(point: <span class="hljs-built_in">Uint8Array</span>, key: <span class="hljs-built_in">Uint8Array</span>): <span class="hljs-built_in">Uint8Array</span></code></pre>
 				<p><strong>encodePoint</strong>: encodes a point representation to a string with either &#39;ASCII&#39; or &#39;UTF-8&#39; encoding</p>
 				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> encodePoint(point: <span class="hljs-built_in">Uint8Array</span>, encoding: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">string</span></code></pre>
-				<p><strong>decodePoint</strong>: Decode elliptic curve point from a string</p>
+				<p><strong>decodePoint</strong>: decode elliptic curve point from a string</p>
 				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> decodePoint(code: <span class="hljs-built_in">string</span>, encoding: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">Uint8Array</span></code></pre>
+				<p><strong>addPoints</strong>: add two points on an elliptic curve</p>
+				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> addPoints(pointA: <span class="hljs-built_in">Uint8Array</span>, pointB: <span class="hljs-built_in">Uint8Array</span>): <span class="hljs-built_in">Uint8Array</span></code></pre>
+				<p><strong>subtractPoints</strong>: subtract two points on an elliptic curve</p>
+				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> subtractPoints(pointA: <span class="hljs-built_in">Uint8Array</span>, pointB: <span class="hljs-built_in">Uint8Array</span>): <span class="hljs-built_in">Uint8Array</span></code></pre>
 				<a href="#oprf-steps" id="oprf-steps" style="color: inherit; text-decoration: none;">
 					<h2>OPRF Steps</h2>
 				</a>
@@ -153,9 +157,9 @@ send(oprf.encodePoint(masked.point, <span class="hljs-string">'UTF-8'</span>));<
 <span class="hljs-comment">// Send salted back to the client</span>
 send(oprf.encodePoint(salted, <span class="hljs-string">'UTF-8'</span>));</code></pre>
 				<p>3.) <strong>Client</strong>: unmask the salted point from the server to get a high-entropy output</p>
-				<pre><code class="language-Typescript"><span class="hljs-comment">// Make sure that masked.mask corresponds to the original mask used. </span>
+				<pre><code class="language-Typescript"><span class="hljs-comment">// Make sure that masked.mask corresponds to the original mask used.</span>
 <span class="hljs-comment">// Otherwise, this will not give you the correct output.</span>
-<span class="hljs-keyword">const</span> salted = oprf.decodePoint(receive(), <span class="hljs-string">'UTF-8'</span>); 
+<span class="hljs-keyword">const</span> salted = oprf.decodePoint(receive(), <span class="hljs-string">'UTF-8'</span>);
 <span class="hljs-keyword">const</span> unmasked = oprf.unmaskInput(salted, masked.mask);</code></pre>
 				<hr>
 				<p>Implementation inspired by Burns et. al.

@@ -130,9 +130,10 @@ it('UTF-8 Encoding/Decoding', async function () {
     const k = oprf.generateRandomScalar();
     const correct = oprf.sodium.crypto_core_ristretto255_add(r, k);
 
-    const result = oprf.addTwoPoints(r, k);
+    const result = oprf.addPoints(r, k);
 
     expect(result).to.deep.equals(correct);
+    expect(oprf.subtractPoints(result, k)).to.deep.equals(r);
   });
 
   it('Point Subtraction', async function () {
@@ -143,9 +144,10 @@ it('UTF-8 Encoding/Decoding', async function () {
     const k = oprf.generateRandomScalar();
     const correct = oprf.sodium.crypto_core_ristretto255_sub(r, k);
 
-    const result = oprf.subtractTwoPoints(r, k);
+    const result = oprf.subtractPoints(r, k);
 
     expect(result).to.deep.equals(correct);
+    expect(oprf.addPoints(result, k)).to.deep.equals(r);
   });
 });
 

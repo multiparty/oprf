@@ -18,8 +18,8 @@
 </head>
 
 <body>
-  <h1>OPRF Tests</h1>
-  <div id="results"></div>
+<h1>OPRF Tests</h1>
+<div id="results"></div>
 </body>
 
 <script type="text/javascript">
@@ -95,6 +95,7 @@
 
     display('ASCII Encoding/Decoding', decoded.toString() === point.toString());
   }
+
   function UTF8() {
     var point = oprf.hashToPoint('This is a test');
     var encoded = oprf.encodePoint(point, 'UTF-8');
@@ -108,15 +109,16 @@
     var pointA = oprf.generateRandomScalar();
     var pointB = oprf.generateRandomScalar();
     var correct = oprf.sodium.crypto_core_ristretto255_add(pointA, pointB);
-    var result = oprf.addTwoPoints(pointA, pointB);
+    var result = oprf.addPoints(pointA, pointB);
 
     display('Point Addition', correct.toString() === result.toString());
   }
+
   function Subtract() {
     var pointA = oprf.generateRandomScalar();
     var pointB = oprf.generateRandomScalar();
     var correct = oprf.sodium.crypto_core_ristretto255_sub(pointA, pointB);
-    var result = oprf.subtractTwoPoints(pointA, pointB);
+    var result = oprf.subtractPoints(pointA, pointB);
 
     display('Point Subtraction', correct.toString() === result.toString());
   }

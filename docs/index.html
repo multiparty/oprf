@@ -121,7 +121,7 @@
 				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> maskInput(input: <span class="hljs-built_in">string</span>): IMaskedData</code></pre>
 				<p><strong>maskPoint</strong>: applies a random mask to an elliptic curve point</p>
 				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> maskPoint(point: <span class="hljs-built_in">Uint8Array</span>): IMaskedData</code></pre>
-				<p><strong>unmaskInput</strong>: applies the multiplicative inverse of the mask to the masked point</p>
+				<p><strong>unmaskPoint</strong>: applies the multiplicative inverse of the mask to the masked point</p>
 				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> unmaskPoint(maskedPoint: <span class="hljs-built_in">Uint8Array</span>, mask: <span class="hljs-built_in">Uint8Array</span>): <span class="hljs-built_in">Uint8Array</span></code></pre>
 				<p><strong>generateRandomScalar</strong>: generates a uniform random 32-byte number in [1, order of curve)</p>
 				<pre><code class="language-Typescript"><span class="hljs-keyword">public</span> generateRandomScalar(): <span class="hljs-built_in">Uint8Array</span></code></pre>
@@ -160,7 +160,7 @@ send(oprf.encodePoint(salted, <span class="hljs-string">&#x27;UTF-8&#x27;</span>
 				<pre><code class="language-Typescript"><span class="hljs-comment">// Make sure that masked.mask corresponds to the original mask used.</span>
 <span class="hljs-comment">// Otherwise, this will not give you the correct output.</span>
 <span class="hljs-keyword">const</span> salted = oprf.decodePoint(receive(), <span class="hljs-string">&#x27;UTF-8&#x27;</span>);
-<span class="hljs-keyword">const</span> unmasked = oprf.unmaskInput(salted, masked.mask);</code></pre>
+<span class="hljs-keyword">const</span> unmasked = oprf.unmaskPoint(salted, masked.mask);</code></pre>
 				<hr>
 				<p>Implementation inspired by Burns et. al.
 				<a href="https://pdfs.semanticscholar.org/5d33/ea1d3fda454875a6a6ee7c535c80c74af512.pdf">https://pdfs.semanticscholar.org/5d33/ea1d3fda454875a6a6ee7c535c80c74af512.pdf</a></p>

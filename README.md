@@ -77,7 +77,7 @@ public maskInput(input: string): IMaskedData
 public maskPoint(point: Uint8Array): IMaskedData
 ```
 
-**unmaskInput**: applies the multiplicative inverse of the mask to the masked point
+**unmaskPoint**: applies the multiplicative inverse of the mask to the masked point
 ```Typescript
 public unmaskPoint(maskedPoint: Uint8Array, mask: Uint8Array): Uint8Array
 ```
@@ -142,7 +142,7 @@ send(oprf.encodePoint(salted, 'UTF-8'));
 // Make sure that masked.mask corresponds to the original mask used.
 // Otherwise, this will not give you the correct output.
 const salted = oprf.decodePoint(receive(), 'UTF-8');
-const unmasked = oprf.unmaskInput(salted, masked.mask);
+const unmasked = oprf.unmaskPoint(salted, masked.mask);
 ```
 
 
